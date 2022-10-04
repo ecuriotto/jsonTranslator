@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Translate Camunda</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+      </head>
+      <body>
+        <section class="section">
+            <div class="container">
+                <h1 class="title">
+                    Translation application</h1>
+                <p class="subtitle">
+                    Let's translate <strong>Camunda</strong> applications!
+                </p>
+            </div>
+        </section>
+        <p>
+            
+            <div>
+                <input type="file" id="file-selector" accept=".json">
+            </div>
+            
+            <div id="myData"></div>
+            <!--
+            <h2>Variable</h2>
+            <p><%= tagline %></p>
+             
+            
+                <% mascots.forEach(function(mascot) { %>
+                   
+                    <div class="columns">
+                    <div class="column is-one-third">
+                        <input class="input" type="text" placeholder="Text input" value="<%= mascot.name %>"/>
+                    </div>
+                    <div class="column is-one-third">
+                        <input class="input" type="text" placeholder="Text input" value="<%= mascot.organization %>"/>
+                    </div>
+                </div>    
+                  
+                
+                
+                <% }); %>
+              
+             --> 
+        </p>
+        <script>
+            const fileSelector = document.getElementById('file-selector');
+            fileSelector.addEventListener('change', (event) => {
+                
+              const file = event.target.files[0];
+              console.log(file);
+              readJson(file);  
+            });
+
+            function readJson(file) {
+
+                const reader = new FileReader();
+                reader.addEventListener('load', (event) => {
+                    //console.log(event.target.result)
+                    var myData = JSON.parse(event.target.result);
+                    console.log(document.getElementById("myData"))
+                    rp(myData, document.getElementById("myData"));
+
+                });
+                reader.readAsText(file);
+                
+             function rp(myData, element){
+                for (const key in myData){
+                    let div = document.createElement('div');
+                    div.className = "columns"
+                       if(typeof myData[key] == "string"){
+
+                         let divCode = document.createElement('div')
+                         divCode.className = "column is-one-third"
+                         divCode.innerHTML = '<input class="input is-success" type="text" readonly value="'+key+'">';
+                         let divEng = document.createElement('div')
+                         divEng.className = "column is-one-third"
+                         divEng.innerHTML = '<input class="input is-warning" type="text" readonly value="'+myData[key]+'">';
+                         let divToTranslate = document.createElement('div')
+                         divToTranslate.className = "column is-one-third"
+                         divToTranslate.innerHTML = '<input class="input" type="text"></input>'
+                         div.appendChild(divCode);
+                         div.appendChild(divEng);
+                         div.appendChild(divToTranslate);  
+                         element.appendChild(div);
+                       }
+                       else{
+                            console.log(key);
+                            let divTitle = document.createElement('div')
+                            divTitle.className = "column is-one-fifth"
+                            divTitle.innerHTML = key;
+                            div.appendChild(divTitle);
+                            element.appendChild(div);
+                            rp(myData[key], element)
+                       }
+                       
+                       console.log(key + " - " + myData[key])
+                }
+                
+             }   
+}
+          </script>
+      </body>
+
+</html>

@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "bulma": "^0.9.4",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "http": "^0.0.1-security"
+  },
+  "name": "translation-app",
+  "version": "1.0.0",
+  "description": "simple web app for translating camunda apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server"
+  },
+  "author": "Enrico",
+  "license": "ISC"
+}
