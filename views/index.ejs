@@ -86,13 +86,22 @@
             fileSelector.addEventListener('change', (event) => {
                 
               const file = event.target.files[0];
-              analyseInputJson(file, createDom);  
+              analyseInputJson(file, createDom);
+               
             });
 
             const saveButton = document.getElementById('save');
             saveButton.addEventListener('click', (event) => {
                 saveOutputJson(myData);
             });
+
+            //Load the validate checkboxes on the first click of the myData div.
+            //Could be replaced with https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver ?
+            //What happens if we load a new file?
+            const myDataDom = document.getElementById('myData');
+            myDataDom.addEventListener('click', (event) => {
+                createValidateCheckboxes();
+            },{ once: true}); 
           </script>
       </body>
 
