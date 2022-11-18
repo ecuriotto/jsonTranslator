@@ -75,6 +75,21 @@ let checkNested = (obj, level, ...rest) => {
     return checkNested(obj[level], ...rest)
 }
 
+const manageCompleteness = (numberOfUpdatedKeys, numberOfTotalKeys) => {
+    let saveEl = document.getElementById("save");
+    if(numberOfUpdatedKeys!=0 && numberOfUpdatedKeys==numberOfTotalKeys){
+        isFinal = true;
+        saveEl.textContent = "Save"
+        saveEl.classList.remove("is-warning");
+        saveEl.classList.add("is-link");
+    }
+    else{
+        isFinal = false
+        saveEl.textContent = "Save as draft"
+        saveEl.classList.remove("is-link");
+        saveEl.classList.add("is-warning");
+    }
+}
 
 const updateProgressBar = () => {
     let numberOfUpdatedKeys = 0;
@@ -89,6 +104,9 @@ const updateProgressBar = () => {
     }
     progressTextElement.innerHTML = numberOfUpdatedKeys + " / " + numberOfTotalKeys + " keys updated";
     progressElement.value = numberOfUpdatedKeys;
+    
+    manageCompleteness(numberOfUpdatedKeys, numberOfTotalKeys);
+
 
 }
 
