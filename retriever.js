@@ -4,6 +4,7 @@ const GoogleTranslateClient = require('./googleTranslateClient')
 getData = async (languageCode, page, limit) =>{ 
     console.time();
     let fileMatchesWithFirestore = inputDataFromFile.getDataFromFile();
+    let translatedByUserSavedInDraft = inputDataFromFile.getTranslatedByUserSavedInDraft();
     let paginatedKeys = Object.keys(fileMatchesWithFirestore).slice(limit * page, limit * (page + 1))
     //let paginatedData = paginatedKeys.reduce((cur, key) => { return Object.assign(cur, { [key]: fileMatchesWithFirestore[key] })}, {});
     /*
@@ -24,9 +25,13 @@ getData = async (languageCode, page, limit) =>{
         else{
             singleEntry["machineTranslation"] = fileMatchesWithFirestore[key]
         }
+        let phraseToTranslateTrimmed = key.replace(/\s/g, "")
+        if(translatedByUserSavedInDraft[phraseToTranslateTrimmed]){
+            singleEntry["myTranslation"] = translatedByUserSavedInDraft[phraseToTranslateTrimmed];
+        }
         paginatedData.push(singleEntry);   
     }    
-
+    console.log(paginatedData);
     console.timeEnd();
     return paginatedData;
 }

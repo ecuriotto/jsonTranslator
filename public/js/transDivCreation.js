@@ -135,6 +135,9 @@ writeMyTranslation = (trans, divToAdd) => {
     inpEl.setAttribute("rows", calculaterows(trans.english.length))
     inpEl.setAttribute("id", "myTrans|" + rems(trans.english))
     inpEl.setAttribute("name", "myTrans");
+    if(trans.myTranslation){
+        inpEl.value = trans.myTranslation;
+    }
     divEl.appendChild(inpEl);
     divToAdd.appendChild(divEl);
     return divToAdd;

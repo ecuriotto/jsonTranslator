@@ -3,6 +3,7 @@ const path = require('path');
 const collection = 'dictionary';
 
 let phrasesInFile = [];
+let translatedByUserSavedInDraft = {};
 let fileMatchesWithFirestore = {};
 let languageCode = '';
 
@@ -13,6 +14,10 @@ function initVar(){
 
 savePhrasesInFileRec = (body) =>{    
     for(let key in body){
+        if(key=="***MYTRANS***"){
+            translatedByUserSavedInDraft = body[key];
+            break;
+        }
         let val = body[key];
         if(typeof val == "string"){
             phrasesInFile.push(val)
@@ -46,15 +51,17 @@ saveDataFromFile = async (body, lang) =>{
     languageCode = lang;
     initVar();
     savePhrasesInFileRec(body);
+    console.log(phrasesInFile);
+    console.log(translatedByUserSavedInDraft);
     await prepareAdditionalData()
     return Object.keys(fileMatchesWithFirestore).length;
 }
 
 getDataFromFile = () =>{ 
     return fileMatchesWithFirestore
-    //console.log(phrasesForHelper)
-    //return phrasesInFile;
 }
-
-module.exports = {saveDataFromFile, getDataFromFile} 
+getTranslatedByUserSavedInDraft = () =>{ 
+    return translatedByUserSavedInDraft;
+}
+module.exports = {saveDataFromFile, getDataFromFile, getTranslatedByUserSavedInDraft} 
 

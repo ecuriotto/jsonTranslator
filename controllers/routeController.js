@@ -9,7 +9,7 @@ getData = async (request, response) => {
     const limit = parseInt(request.query.limit);
     console.log(`languageCode ${languageCode} page ${page} and limit= ${limit}`)
     let paginatedData = await retriever.getData(languageCode, page, limit);
-    console.log(`route controller paginated data: ${paginatedData}`);
+    //console.log(`route controller paginated data: ${paginatedData}`);
     response.send(paginatedData);
 
 }

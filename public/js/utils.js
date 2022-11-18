@@ -76,66 +76,14 @@ let checkNested = (obj, level, ...rest) => {
     if (rest.length == 0 && obj.hasOwnProperty(level)) return true
     return checkNested(obj[level], ...rest)
 }
-let saveOutputJson = () => {
-    jsonToSave = myData;
-    createOutputJson();
-    console.log(jsonToSave);
-    download(JSON.stringify(jsonToSave, null, 2), fileName.split("\.")[0] + '-draft.json', 'text/plain');
-}
-let createFinalFile = (jsonToSave) => {
-    for (const key in jsonToSave) {
-        if (typeof jsonToSave[key] == "string") {
-            let phraseToTranslate = jsonToSave[key];
-            let myTransEl = document.getElementById("myTrans|" + rems(phraseToTranslate));
-            if(myTransEl){
-                let phraseTranslated = myTransEl.value; 
-                jsonToSave[key] = phraseTranslated;
-            }
-        }
-        else {
-            //console.log(key + " - " + jsonOrigin[key]);
-            createFinalFile(jsonToSave[key]);
-        }
-    }
-}
-let createDraft = () => {
-    let savedData = {}
-    for (let prop in jsonToSave) {
-        savedData[prop] = jsonToSave[prop]
-    }
 
-    let humanTranslations = {};
-    for (let myTrans of document.getElementsByName("myTrans")) {
-        if (myTrans.value && myTrans.value != "") {
-            let rootId = myTrans.id.split("|")[1];
-            let eng = document.getElementById("eng|" + rootId);
-            humanTranslations[rems(eng.value)] = myTrans.value
-        }
-    }
-    savedData["***HUMANTRANS***"] = humanTranslations
-    jsonToSave = savedData
-} 
-let createOutputJson = () => {
-    const isFinal = document.getElementById("draftSwitch").checked;
-    console.log(isFinal);
-    isFinal ? createFinalFile(jsonToSave) : createDraft();
-    
-}
-
-function download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
-}
 
 const updateProgressBar = () => {
     let numberOfUpdatedKeys = 0;
     let progressElement = document.getElementById("progress");
     let progressTextElement = document.getElementById("progressText");
     progressElement.setAttribute("max", numberOfTotalKeys);
-    let toTranslate = document.getElementsByName("toTranslate");
+    let toTranslate = document.getElementsByName("myTrans");
     for (key of toTranslate) {
         if (key.value != null && key.value != "" && !key.classList.contains(helperColor)) {
             numberOfUpdatedKeys++;
