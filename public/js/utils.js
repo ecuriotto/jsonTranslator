@@ -25,9 +25,7 @@ analyseInputJson = (file) => {
         let myDataRaw = event.target.result
 
         numberOfTotalKeysObj = await makeRequest("POST", "http://localhost:7070/saveDataFromFile/" + languageSelection.code, myDataRaw);
-        console.log(numberOfTotalKeysObj);
         numberOfTotalKeys = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
-        console.log("numner of total keys " + numberOfTotalKeys)
         totalPages = Math.ceil(numberOfTotalKeys / limit)
         let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
         writeHeader();
@@ -118,7 +116,6 @@ const cleanMyData = () => {
 function makeRequest(method, url, payload, requestParams) {
     return new Promise(function (resolve, reject) {
         const urlWithParams = requestParams ? url + "?" + requestParams : url
-        console.log(urlWithParams);
         let xhr = new XMLHttpRequest();
         xhr.open(method, urlWithParams);
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -145,6 +142,24 @@ function makeRequest(method, url, payload, requestParams) {
             xhr.send();
         }
     });
+}
+saveInFirestore= () => {
+    const myTranslations = document.getElementsByName("myTrans");
+    let correctMachineTranslations = {}
+    for(myTrans of myTranslations){
+        if(myTrans.value && myTrans.value !=""){
+            let rootId = myTrans.id.split("|")[1];
+            let machineTrans = document.getElementById("machineTrans|"+rootId);
+            let eng = document.getElementById("eng|"+rootId);
+            if(myTrans.value != machineTrans.value){
+                correctMachineTranslations[eng.value] = myTrans.value;
+            }
+        }
+    }
+    console.log(correctMachineTranslations)
+    if(Object.keys(correctMachineTranslations).length > 0){
+        makeRequest("POST", "http://localhost:7070/saveInFirestore/" + languageSelection.code, JSON.stringify(correctMachineTranslations));
+    }
 }
 
 setInterval(updateProgressBar, 5000)

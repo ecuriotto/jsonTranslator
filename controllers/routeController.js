@@ -1,6 +1,7 @@
-const translationsMaster = require('../translationsMaster')
-const inputDataFromFile = require('../model/inputData')
+//const translationsMaster = require('../translationsMaster')
+const InputData = require('../model/inputData')
 const retriever = require('../retriever')
+const FirestoreClient = require('../firestoreClient');
 
 getData = async (request, response) => {
     console.log('controller getDataFromFile.......')
@@ -18,9 +19,15 @@ saveDataFromFile = async (request, response) => {
     //Called when we upload the file
     console.log('controller saveDataFromFile.......')
     const languageCode = request.params.lang;
-    const numberOfPhrases = await inputDataFromFile.saveDataFromFile(request.body, languageCode);
+    const numberOfPhrases = await InputData.saveDataFromFile(request.body, languageCode);
     console.log('controller saveDataFromFile data are saved.......')
     response.send({ numberOfPhrases: numberOfPhrases });
 }
 
-module.exports = { saveDataFromFile, getData }
+saveInFirestore = async (request, response) => {
+    const languageCode = request.params.lang;
+    await FirestoreClient.saveByPath(languageCode, request.body);
+    response.status(204).send('Status: Ok');
+}
+
+module.exports = { saveDataFromFile, getData, saveInFirestore }

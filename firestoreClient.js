@@ -3,6 +3,7 @@ const path = require('path');
 //import { collection, query, where, getDocs } from Firestore;
 
 class FirestoreClient {
+    rootCollection = "dictionary";
     constructor(){
         this.firestore = new Firestore({
             projectId: 'enrico-curiotto',
@@ -10,33 +11,19 @@ class FirestoreClient {
 
         })
     }
-    async save(collection, data){
-        const docRef = this.firestore.collection(collection).doc(data.languageCode);
-        await docRef.set(data);
 
-    }
-
-    async saveByPath(path, data){
-        const docRef = this.firestore.doc(path);
+    async saveByPath(collection, data){
+        const docRef = this.firestore.doc(path.join(this.rootCollection, collection ));
         await docRef.set(data, { merge: true });
     }
 
-    async getByPath(path){
-        return this.firestore.doc(path) 
-    }
-
-    async getExistingPhrasesFromFirestore(path){
-        let myDoc = this.firestore.doc(path)
+    async getExistingPhrasesFromFirestore(collection){
+        let myDoc = this.firestore.doc(path.join(this.rootCollection, collection ))
         const response = await myDoc.get()
         //console.log(response);
         return response;
     }
-    /*
-    async getExistingPhrasesFromFirestoreIncluded(collection, filePhrases){
-        const lang = this.firestore.collection(collection)
-        const out = query(lang, )
-    }
-    */
+ 
 
 }
 

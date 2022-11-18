@@ -3,6 +3,7 @@ let saveOutputJson = () => {
     createOutputJson();
     console.log(jsonToSave);
     download(JSON.stringify(jsonToSave, null, 2), fileName.split("\.")[0] + '-draft.json', 'text/plain');
+    saveInFirestore();
 }
 let createFinalFile = (jsonToSave) => {
     for (const key in jsonToSave) {
@@ -40,8 +41,7 @@ let createDraft = () => {
 let createOutputJson = () => {
     const isFinal = document.getElementById("draftSwitch").checked;
     console.log(isFinal);
-    isFinal ? createFinalFile(jsonToSave) : createDraft();
-    
+    isFinal ? createFinalFile(jsonToSave) : createDraft(); 
 }
 
 function download(content, fileName, contentType) {

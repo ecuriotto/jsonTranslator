@@ -1,6 +1,4 @@
 const FirestoreClient = require('../firestoreClient')
-const path = require('path');
-const collection = 'dictionary';
 
 let phrasesInFile = [];
 let translatedByUserSavedInDraft = {};
@@ -30,7 +28,7 @@ savePhrasesInFileRec = (body) =>{
 
 prepareAdditionalData = async () => {
 
-        const firestoreExistingPhrases = await FirestoreClient.getExistingPhrasesFromFirestore(path.join(collection,languageCode));
+        const firestoreExistingPhrases = await FirestoreClient.getExistingPhrasesFromFirestore(languageCode);
         const firestoreExistingPhrasesData = firestoreExistingPhrases.data();
     
         let firestoreExistingPhrasesKeysUpper = Object.keys(firestoreExistingPhrasesData).map(firePhrase => firePhrase.toUpperCase())
