@@ -1,0 +1,82 @@
+<section class="section">
+    <div class="container">
+        <ul class="steps is-balanced">
+            <li class="steps-segment  is-active">
+              <span class="steps-marker"></span>
+              <div class="steps-content">
+                <p class="is-size-4">Step 1</p>
+                <p>Select a language you want to translate to. (AI will help you)</p>
+                <!--
+                <div class="control has-icons-left">
+                    <div class="select">
+                        <select id="selectLanguage">
+                            <option selected>Italian</option>
+                            <option>French</option>
+                            <option>Spanish</option>
+                        </select>
+                    </div>
+                    <div class="icon is-small is-left">
+                    <i class="fas fa-globe"></i>
+                    </div>
+                </div>
+                -->
+                <div class="container">
+                    <div class="input-field col s6">
+                    <input placeholder="e.g French" id="search" type="text" class="validate" value="it" />
+                    </div>
+                </div>
+                <div id="countryList"></div>
+            </div>
+            </li>
+            <li class="steps-segment">
+              <span class="steps-marker"></span>
+              <div class="steps-content">
+                <p class="is-size-4">Step 2</p>
+                Select a json file from one of these sources
+                <div class="file">
+                    <label class="file-label">
+<!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
+                      <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json">
+
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+
+              </div>
+            </li>
+            <li class="steps-segment">
+              <span class="steps-marker"></span>
+              <div class="steps-content">
+                <p class="is-size-4">Step 3</p>
+                <p>Translate.... </p>               
+              </div>
+            </li>
+            <li class="steps-segment">
+              <span class="steps-marker"></span>
+              <div class="steps-content">
+                <p class="is-size-4">Step 4</p>
+                <p>Save your file as a draft or final </p>
+                <button class="button" id="save">Save your file</button>
+                <div class="field">
+                    <input id="draftSwitch" type="checkbox" name="draftSwitch" class="switch is-rtl">
+                    <label for="draftSwitch">Draft</label>
+                    Final
+                  </div>
+              </div>
+            </li>
+          </ul>
+    </div>
+</section>    
+<section class="section">
+    <div class="container">
+        <label id="progressText"></label>
+        <progress class="progress is-success" id="progress" value="0" max="0">progress</progress>
+    </div>    
+</section>

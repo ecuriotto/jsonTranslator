@@ -1,108 +1,25 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Translate Camunda</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-        <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" integrity="sha384-X8QTME3FCg1DLb58++lPvsjbQoCT9bp3MsUU3grbIny/3ZwUJkRNO8NPW6zqzuW9" crossorigin="anonymous">-->
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-        <script src="js/utils.js"></script>
-    </head>
-      <body>
-        <section class="hero has-background-black">
-            <div class="container">
-                <figure class="image center">
-                    <img src="images/Logo_White.svg">
-                </figure>
-            </div>
-        </section>
-        <section class="hero has-background-black">
-            <div class="container">
-                <h1 class="title has-text-white" >Help us translating Camunda applications!
-                
-            </h1>
-            </div>
-        </section>
-        <section class="section">
-            <div class="container">
-                <div class="columns">
+<%- include('header') %>
+  <%- include('selection') %>
 
-                    <div class="column">
-                        <div class="notification">
-                            Select a json file from one of these sources
-                            <div class="file">
-                                <label class="file-label">
-                                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json">
-                                  <span class="file-cta">
-                                    <span class="file-icon">
-                                      <i class="fas fa-upload"></i>
-                                    </span>
-                                    <span class="file-label">
-                                      Choose a file…
-                                    </span>
-                                  </span>
-                                </label>
-                              </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="notification">
-                            <p>Select a language you want to translate to. (AI will help you)</p>
-                            <div class="control has-icons-left">
-                                <div class="select">
-                                <select>
-                                    <option selected>Italian</option>
-                                    <option>French</option>
-                                    <option>Spanish</option>
-                                </select>
-                                </div>
-                                <div class="icon is-small is-left">
-                                <i class="fas fa-globe"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="notification">
-                            <button class="button is-rounded" id="save">Save your file</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>    
-  
-        <section class="section">
-            <div class="container">
-                <label id="progressText"></label>
-                <progress class="progress is-success" id="progress" value="0" max="0">progress</progress>
-            </div>    
-        </section>
+    <div id="myData"></div>
 
-        <div id="myData"></div>
+    <script>
+      const fileSelector = document.getElementById('file-selector');
+      fileSelector.addEventListener('change', (event) => {
+        cleanMyData();
+        const file = event.target.files[0];
+        analyseInputJson(file);
+        nextStep(2);
 
-        <script>
-            const fileSelector = document.getElementById('file-selector');
-            fileSelector.addEventListener('change', (event) => {
-                
-              const file = event.target.files[0];
-              analyseInputJson(file, createDom);
-               
-            });
+      });
 
-            const saveButton = document.getElementById('save');
-            saveButton.addEventListener('click', (event) => {
-                saveOutputJson(myData);
-            });
+      const saveButton = document.getElementById('save');
+      saveButton.addEventListener('click', () => {
+        saveOutputJson();
+      });
 
-            //Load the validate checkboxes on the first click of the myData div.
-            //Could be replaced with https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver ?
-            //What happens if we load a new file?
-            const myDataDom = document.getElementById('myData');
-            myDataDom.addEventListener('click', (event) => {
-                createValidateCheckboxes();
-            },{ once: true}); 
-          </script>
-      </body>
+      document.getElementById('search').addEventListener('input', () => searchcountry(search.value));
+    </script>
+    </body>
 
-</html>
+    </html>

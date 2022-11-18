@@ -1,28 +1,21 @@
-var express = require('express');
+const express = require('express');
+const path = require('path');
+const routeRoutes = require('./routes/routeRoutes');
+const cors = require('cors')
 
-var app = express();
+const app = express();
 app.set('view engine','ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(cors())
+
 app.use( express.static( "public" ) );
-
-app.get('/', function (req, res) {
-
-  const mascots = [
-    { name: 'Sammy', organization: "DigitalOcean", birth_year: 2012},
-    { name: 'Tux', organization: "Linux", birth_year: 1996},
-    { name: 'Moby Dock', organization: "Docker", birth_year: 2013}
-  ];
-  const tagline = "No programming concept is complete without a cute animal mascot.";
-
-  //res.send('Simple Web Application is UP 2');
-  res.render('index', {
-    mascots: mascots,
-    tagline: tagline
-  });
-
-});
+app.use(express.json())
 
 app.listen(7070, function () {
-
-console.log('Simple Web Application running on port 7070!');
-
+  console.log('Translation Application running on port 7070!');
 });
+
+// To recognize the incoming request object as strings or arrays
+app.use (express.urlencoded ({extended: true}));
+// Application routes
+app.use(routeRoutes);

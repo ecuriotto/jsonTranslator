@@ -1,174 +1,202 @@
-
-
 let myData = {};
+//number of unique phrases to translate in the file
 let numberOfTotalKeys = 0;
-let helperKeyword = "automatic-help";
-let userKeyword = "my-translation"
+const getDataUrl = "http://localhost:7070/getData/";
+const helperKeyword = "automatic-help";
+const userKeyword = "my-translation"
+const helperColor = "has-text-link"
 
+let divData = null;
+let jsonToSave = null;
+let page = 0;
+let limit = 6
+let totalPages = 0
+let fileName = "translation.json"
+
+let numberOfTotalKeysObj;
 
 //This function can either be used to write the form based on the json, or to update the json with the translated data
-analyseInputJson = (file, func) => {
+analyseInputJson = (file) => {
 
     const reader = new FileReader();
-    reader.addEventListener('load', (event) => {
-        //console.log(event.target.result)
+    reader.addEventListener('load', async (event) => {
         myData = JSON.parse(event.target.result);
-        
-        func(myData, document.getElementById("myData"), 0);
+        fileName = file.name;
+        let myDataRaw = event.target.result
 
+        numberOfTotalKeysObj = await makeRequest("POST", "http://localhost:7070/saveDataFromFile/" + languageSelection.code, myDataRaw);
+        console.log(numberOfTotalKeysObj);
+        numberOfTotalKeys = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
+        console.log("numner of total keys " + numberOfTotalKeys)
+        totalPages = Math.ceil(numberOfTotalKeys / limit)
+        let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
+        writeHeader();
+        writeDom(JSON.parse(paginatedData));
     });
     reader.readAsText(file);
-}    
 
+}
 
-createDom = (myData, element, iteration) => {
+function checkIfDuplicateExists(arr) {
+    //return new Set(arr).size !== arr.length
+    return new Set(arr).size + "-" + arr.length
+}
 
-    for (const key in myData){
-        let div = document.createElement('div');
-        //helperKeyword, userKeyword are added by the webapp so they are filtered
-        if([helperKeyword, userKeyword].includes(key))
-            break;
-        if(typeof myData[key] == "string"){
-            div.className = "columns has-background-black"
-            let divCode = document.createElement('div')
-            divCode.className = "column is-one-fifth"
-            divCode.innerHTML = '<input id="item" class="input is-success" type="text" disabled value="'+key+'">';
-            let divEng = document.createElement('div')
-            divEng.className = "column is-one-third"
-            divEng.innerHTML = '<input class="input is-warning" type="text" disabled value="'+myData[key]+'">';
-            let divToTranslate = document.createElement('div')
-            divToTranslate.className = "column is-one-third"
-            let pickedValue = pickValue(key);
-            if(pickedValue.source=="file"){
-                divToTranslate.innerHTML = '<input id="'+key+'" class="input" name="toTranslate" placeholder="Please translate '+myData[key]+'" type="text"></input>'
-            }
-            else{
-                divToTranslate.innerHTML = '<input id="'+key+'" class="input" name="toTranslate" value="'+pickedValue.val+'" type="text"></input>'
-            }
-
-            for(let i=0; i< iteration; i++){
-            let divEmptyColumn = document.createElement('div')
-            divEmptyColumn.className = "column is-1"
-            //divEmptyColumn.innerHTML = 'X';
-            div.appendChild(divEmptyColumn)
-            }
-            div.appendChild(divCode);
-            div.appendChild(divEng);
-            div.appendChild(divToTranslate);
-            if(pickedValue.source=="helper"){
-                let divCheckbox = document.createElement('div')
-                divCheckbox.className = "column is-1"
-                divCheckbox.innerHTML='<label id="lab-check-'+key+'" class="checkbox has-text-white"><input name="helper-checkbox" id="check-'+key+'" type="checkbox">Validate translation?</label>';
-                div.appendChild(divCheckbox);
-
-            }
-                
-            element.appendChild(div);
-            numberOfTotalKeys = numberOfTotalKeys +1;
+let doubleKeysVerify = []
+verifyDoubleKeys = (myData) => {
+    for (const key in myData) {
+        if (typeof myData[key] == "string") {
+            doubleKeysVerify.push(key)
         }
-        else{ //title
-            
-            div.className = "columns"
-            let divTitle = document.createElement('div')
-            divTitle.className = "column is-full has-background-black"
-            divTitle.innerHTML = '<label class="label has-text-white">' + key + '</label>';
-
-            for(let i=0; i< iteration; i++){
-                let divEmptyColumn = document.createElement('div')
-                divEmptyColumn.className = "column is-1"
-                //divEmptyColumn.innerHTML = 'X';
-                div.appendChild(divEmptyColumn)
-            }
-            div.appendChild(divTitle);
-            //document.getElementById("myData").appendChild(div);
-            element.appendChild(div);
-            createDom(myData[key], divTitle, iteration + 1)
-        }                 
+        else {
+            verifyDoubleKeys(myData[key])
+        }
     }
 }
-let pickValue = (key) =>{
-    let result = {"val":"","source":""}
-    if(checkNested(myData, userKeyword, key)){
-        result.val=myData[userKeyword][key];
-        result.source="human";
+
+let pickValue = (key) => {
+    let result = { "val": "", "source": "" }
+    if (checkNested(myData, userKeyword, key)) {
+        result.val = myData[userKeyword][key];
+        result.source = "human";
     }
-    else if(checkNested(myData, helperKeyword, key)){
-        result.val=myData[helperKeyword][key];
-        result.source="helper";
+    else if (checkNested(myData, helperKeyword, key)) {
+        result.val = myData[helperKeyword][key];
+        result.source = "helper";
     }
-    else{
-        result.val=myData[key];
-        result.source="file";
+    else {
+        result.val = myData[key];
+        result.source = "file";
     }
     return result;
 }
 
-let checkNested = (obj, level,  ...rest) => {
+let checkNested = (obj, level, ...rest) => {
     if (obj === undefined) return false
     if (rest.length == 0 && obj.hasOwnProperty(level)) return true
     return checkNested(obj[level], ...rest)
-} 
-let saveOutputJson = (jsonOrigin) =>{
-
-    createOutputJson(jsonOrigin);
-    download(JSON.stringify(jsonOrigin, null, 2), 'translation.json', 'text/plain');
 }
-
-let createOutputJson = (jsonOrigin) =>{
-    for(const key in jsonOrigin){
-        if(typeof jsonOrigin[key] == "string"){
-            var element = document.getElementById(key);
-            jsonOrigin[key] = element.value;
-            console.log(jsonOrigin[key]);
-        }
-        else{
-            console.log(key + " - " + jsonOrigin[key]);
-            createOutputJson(jsonOrigin[key]);
-        }
-   } 
+let saveOutputJson = () => {
+    jsonToSave = myData;
+    createOutputJson();
+    console.log(jsonToSave);
+    download(JSON.stringify(jsonToSave, null, 2), fileName.split("\.")[0] + '-draft.json', 'text/plain');
 }
-
-let createValidateCheckboxes = () =>{
-    
-    let checkboxes = document.getElementsByName("helper-checkbox");
-    for (const checkbox of checkboxes){
-        checkbox.addEventListener('change', function() {
-        if (this.checked) {
-            console.log("Checkbox is checked.." + this.id);
-            let translationId = this.id.split("-")[1]
-            let elementWithTranslation = document.getElementById(translationId);
-            myData[userKeyword][translationId]=elementWithTranslation.value;
-            console.log(myData[userKeyword][translationId]);
-            this.style.display = 'none';
-            let label = document.getElementById("lab-check-"+translationId)
-            label.style.display = 'none';
-        } 
-        });
+let createFinalFile = (jsonToSave) => {
+    for (const key in jsonToSave) {
+        if (typeof jsonToSave[key] == "string") {
+            let phraseToTranslate = jsonToSave[key];
+            let myTransEl = document.getElementById("myTrans|" + rems(phraseToTranslate));
+            if(myTransEl){
+                let phraseTranslated = myTransEl.value; 
+                jsonToSave[key] = phraseTranslated;
+            }
+        }
+        else {
+            //console.log(key + " - " + jsonOrigin[key]);
+            createFinalFile(jsonToSave[key]);
+        }
     }
+}
+let createDraft = () => {
+    let savedData = {}
+    for (let prop in jsonToSave) {
+        savedData[prop] = jsonToSave[prop]
+    }
+
+    let humanTranslations = {};
+    for (let myTrans of document.getElementsByName("myTrans")) {
+        if (myTrans.value && myTrans.value != "") {
+            let rootId = myTrans.id.split("|")[1];
+            let eng = document.getElementById("eng|" + rootId);
+            humanTranslations[rems(eng.value)] = myTrans.value
+        }
+    }
+    savedData["***HUMANTRANS***"] = humanTranslations
+    jsonToSave = savedData
+} 
+let createOutputJson = () => {
+    const isFinal = document.getElementById("draftSwitch").checked;
+    console.log(isFinal);
+    isFinal ? createFinalFile(jsonToSave) : createDraft();
+    
 }
 
 function download(content, fileName, contentType) {
     var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
+    var file = new Blob([content], { type: contentType });
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
 }
 
-const updateProgressBar = () =>{
+const updateProgressBar = () => {
     let numberOfUpdatedKeys = 0;
     let progressElement = document.getElementById("progress");
     let progressTextElement = document.getElementById("progressText");
     progressElement.setAttribute("max", numberOfTotalKeys);
     let toTranslate = document.getElementsByName("toTranslate");
-    for(key in toTranslate){
-        if(toTranslate[key].value != null && toTranslate[key].value != ""){
+    for (key of toTranslate) {
+        if (key.value != null && key.value != "" && !key.classList.contains(helperColor)) {
             numberOfUpdatedKeys++;
         }
     }
-    progressTextElement.innerHTML = numberOfUpdatedKeys +" / " + numberOfTotalKeys + " keys updated";
+    progressTextElement.innerHTML = numberOfUpdatedKeys + " / " + numberOfTotalKeys + " keys updated";
     progressElement.value = numberOfUpdatedKeys;
 
+}
+
+const nextStep = (next) => {
+    let elements = document.getElementsByClassName("steps-segment");
+    for (const elementId in elements) {
+        if (elementId == next - 1) {
+            elements[elementId].classList.remove("is-active");
+            continue;
+        }
+        if (elementId == next) {
+            elements[elementId].classList.add("is-active");
+            break;
+        }
+
+    }
+}
+
+const cleanMyData = () => {
+    const myDataToDelete = document.getElementById("myData");
+    myDataToDelete.innerHTML = '';
+    myData = {};
+}
+
+function makeRequest(method, url, payload, requestParams) {
+    return new Promise(function (resolve, reject) {
+        const urlWithParams = requestParams ? url + "?" + requestParams : url
+        console.log(urlWithParams);
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, urlWithParams);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        if (payload) {
+            xhr.send(payload);
+        }
+        else {
+            xhr.send();
+        }
+    });
 }
 
 setInterval(updateProgressBar, 5000)
