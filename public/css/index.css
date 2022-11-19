@@ -1,0 +1,32 @@
+#logo-section, #banner-section{
+    background-color:  #2d545e;
+}
+
+#selection-section, #progress-section{ 
+    background-color:  #e1b382;
+}
+
+#myData{
+    background-color: #2d545e;
+}
+
+textarea[name="myTrans"] {
+    background-color: #f0dfce;
+}
+
+.draft-button{
+    background-color: #427c8a;
+    color: #f0dfce;
+}
+
+.final-button{
+    background-color: #2d545e;
+    color: #f0dfce;
+}
+
+.logo-color{
+    background-color:  #2d545e;
+}
+
+
+

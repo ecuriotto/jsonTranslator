@@ -1,6 +1,8 @@
+let isFinal = false;
+
 let saveOutputJson = () => {
     jsonToSave = myData;
-    createOutputJson();
+    isFinal ? createFinalFile(jsonToSave) : createDraft();
     console.log(jsonToSave);
     download(JSON.stringify(jsonToSave, null, 2), fileName.split("\.")[0] + '-draft.json', 'text/plain');
     saveInFirestore();
@@ -38,11 +40,7 @@ let createDraft = () => {
     savedData["***MYTRANS***"] = humanTranslations
     jsonToSave = savedData
 } 
-let createOutputJson = () => {
-    const isFinal = document.getElementById("draftSwitch").checked;
-    console.log(isFinal);
-    isFinal ? createFinalFile(jsonToSave) : createDraft(); 
-}
+
 
 function download(content, fileName, contentType) {
     var a = document.createElement("a");

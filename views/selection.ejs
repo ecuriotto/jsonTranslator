@@ -1,4 +1,4 @@
-<section class="section">
+<section id="selection-section" class="section pb-1">
     <div class="container">
         <ul class="steps is-balanced">
             <li class="steps-segment  is-active">
@@ -63,9 +63,9 @@
               <div class="steps-content">
                 <p class="is-size-4">Step 4</p>
                 <p>Save your file as a draft or final </p>
-                <button class="button" id="save">Save your file</button>
-                <div class="field">
-                    <input id="draftSwitch" type="checkbox" name="draftSwitch" class="switch is-rtl">
+                <button class="button draft-button" id="save" value="Save as a draft">Save as a draft</button>
+                <div hidden class="field">
+                    <input id="draftSwitch" type="checkbox" name="draftSwitch" class="switch is-rtl" hidden>
                     <label for="draftSwitch">Draft</label>
                     Final
                   </div>
@@ -74,9 +74,9 @@
           </ul>
     </div>
 </section>    
-<section class="section">
+<section id="progress-section" class="section pt-1" hidden>
     <div class="container">
         <label id="progressText"></label>
-        <progress class="progress is-success" id="progress" value="0" max="0">progress</progress>
-    </div>    
+        <progress class="progress logo-color" id="progress" value="0" max="0">progress</progress>
+    </div>   
 </section>

@@ -22,5 +22,5 @@ addEventListeners = () =>{
 
     window.addEventListener("scroll", infiniteScrollListenerFunction);
     
-
+ 
 }

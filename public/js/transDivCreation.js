@@ -11,7 +11,7 @@ calculaterows = (transLength) => {
 writeHeader = () => {
     divData = document.getElementById("myData");
     let divToAdd = document.createElement('div');
-    divToAdd.className = "columns has-background-black";
+    divToAdd.className = "columns";
 
     let divHeader1 = document.createElement('div')
     let divHeader1Top = document.createElement('div')
@@ -65,7 +65,7 @@ writeHeader = () => {
 }
 writeInputEng = (trans) => {
     let divToAdd = document.createElement('div');
-    divToAdd.className = "columns has-background-black";
+    divToAdd.className = "columns";
     let divEl = document.createElement('div')
     divEl.classList.add("column");
     divEl.classList.add(textInputSizeClass)
@@ -131,7 +131,7 @@ writeMyTranslation = (trans, divToAdd) => {
     divEl.classList.add("column");
     divEl.classList.add(textInputSizeClass)
     let inpEl = document.createElement("textarea");
-    inpEl.className = "textarea is-link has-background-warning";
+    inpEl.className = "textarea is-link";
     inpEl.setAttribute("rows", calculaterows(trans.english.length))
     inpEl.setAttribute("id", "myTrans|" + rems(trans.english))
     inpEl.setAttribute("name", "myTrans");
