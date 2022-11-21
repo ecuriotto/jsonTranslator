@@ -5,7 +5,7 @@ class GoogleTranslateClient {
   constructor(){
     this.translate = new Translate.Translate({
       projectId: 'enrico-curiotto',
-      keyFilename: path.join(__dirname, '/serviceAccount/service-account.json')
+      keyFilename: path.join(__dirname, '..', 'serviceAccount/service-account.json')
     })  
   }
   async translateText(text, target) {
