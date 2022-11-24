@@ -15,6 +15,8 @@ let fileName = "translation.json"
 
 let numberOfTotalKeysObj;
 
+let numberOfUpdatedKeysInit = 0; //how many keys are already translated at the beginning (DRAFT)
+
 //This function can either be used to write the form based on the json, or to update the json with the translated data
 analyseInputJson = (file) => {
 
@@ -25,11 +27,14 @@ analyseInputJson = (file) => {
         let myDataRaw = event.target.result
 
         numberOfTotalKeysObj = await makeRequest("POST", "http://localhost:7070/saveDataFromFile/" + languageSelection.code, myDataRaw);
-        numberOfTotalKeys = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
+        let numberOfPhrases = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
+        numberOfTotalKeys = numberOfPhrases.total;
+        numberOfUpdatedKeysInit = numberOfPhrases.alreadyTranslated;
         totalPages = Math.ceil(numberOfTotalKeys / limit)
         let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
         writeHeader();
         writeDom(JSON.parse(paginatedData));
+        writePagination();
     });
     reader.readAsText(file);
 
@@ -141,7 +146,6 @@ saveInFirestore= () => {
             }
         }
     }
-    console.log(correctMachineTranslations)
     if(Object.keys(correctMachineTranslations).length > 0){
         makeRequest("POST", "http://localhost:7070/saveInFirestore/" + languageSelection.code, JSON.stringify(correctMachineTranslations));
     }

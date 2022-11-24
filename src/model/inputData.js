@@ -2,6 +2,7 @@ const FirestoreClient = require('../firestoreClient')
 
 let phrasesInFile = [];
 let translatedByUserSavedInDraft = {};
+let alreadyTranslated=[];
 let fileMatchesWithFirestore = {};
 let languageCode = '';
 
@@ -10,6 +11,7 @@ function initVar(){
     fileMatchesWithFirestore = {};
 }
 
+/*
 savePhrasesInFileRec = (body) =>{    
     for(let key in body){
         if(key=="***MYTRANS***"){
@@ -19,6 +21,36 @@ savePhrasesInFileRec = (body) =>{
         let val = body[key];
         if(typeof val == "string"){
             phrasesInFile.push(val)
+        }
+        else{
+            savePhrasesInFileRec(val)
+        }    
+    }
+}
+*/
+savePhrasesInFile = (body) =>{
+    alreadyTranslated=[];
+    translatedByUserSavedInDraft = body["***MYTRANS***"];
+    if(!translatedByUserSavedInDraft){
+        translatedByUserSavedInDraft = {}
+    }
+    savePhrasesInFileRec(body);
+    phrasesInFile = phrasesInFile.concat(alreadyTranslated);
+}
+savePhrasesInFileRec = (body) =>{  
+
+    for(let key in body){
+        if(key=="***MYTRANS***"){
+            break;
+        }
+        let val = body[key];
+        if(typeof val == "string"){
+            if(translatedByUserSavedInDraft[val]){
+                alreadyTranslated.push(val)
+            }
+            else{
+                phrasesInFile.push(val)
+            }        
         }
         else{
             savePhrasesInFileRec(val)
@@ -48,11 +80,12 @@ prepareAdditionalData = async () => {
 saveDataFromFile = async (body, lang) =>{
     languageCode = lang;
     initVar();
-    savePhrasesInFileRec(body);
-    console.log(phrasesInFile);
-    console.log(translatedByUserSavedInDraft);
+    savePhrasesInFile(body);
     await prepareAdditionalData()
-    return Object.keys(fileMatchesWithFirestore).length;
+    let output = {};
+    output["total"]=Object.keys(fileMatchesWithFirestore).length
+    output["alreadyTranslated"]=Object.keys(translatedByUserSavedInDraft).length
+    return output;
 }
 
 getDataFromFile = () =>{ 

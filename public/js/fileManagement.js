@@ -2,8 +2,13 @@ let isFinal = false;
 
 let saveOutputJson = () => {
     jsonToSave = myData;
-    isFinal ? createFinalFile(jsonToSave) : createDraft();
-    console.log(jsonToSave);
+    if(isFinal) {
+        createFinalFile(jsonToSave);
+        delete jsonToSave["***MYTRANS***"];
+    }    
+    else{
+        createDraft();
+    }
     download(JSON.stringify(jsonToSave, null, 2), fileName.split("\.")[0] + '-draft.json', 'text/plain');
     saveInFirestore();
 }

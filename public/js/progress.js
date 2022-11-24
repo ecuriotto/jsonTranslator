@@ -3,7 +3,7 @@ const manageCompleteness = (numberOfUpdatedKeys, numberOfTotalKeys) => {
     let saveEl = document.getElementById("save");
     if (numberOfUpdatedKeys != 0 && numberOfUpdatedKeys == numberOfTotalKeys) {
         isFinal = true;
-        saveEl.textContent = "Save"
+        saveEl.textContent = "Save final"
         saveEl.classList.remove("draft-button");
         saveEl.classList.add("final-button");
     }

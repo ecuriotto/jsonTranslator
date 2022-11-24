@@ -21,12 +21,32 @@ textarea[name="myTrans"] {
 
 .final-button{
     background-color: #2d545e;
-    color: #f0dfce;
+    color: #fbf352;
+    animation: blinker 1.5s linear infinite;
 }
 
 .logo-color{
     background-color:  #2d545e;
 }
 
+.paginationDiv{
+    display: inline-block;
+}
 
+.are-small{
+    white-space: nowrap;
+}
+
+#pagination{
+    background-color:  #e1b382;
+}
+
+#paginationInput{
+    width: 15%;
+}
+
+.paginationBtn:hover:not(.active) {
+    background-color: #2d545e;
+    color: white;
+}
 
