@@ -137,6 +137,10 @@ writeMyTranslation = (trans, divToAdd) => {
     inpEl.setAttribute("name", "myTrans");
     if(trans.myTranslation){
         inpEl.value = trans.myTranslation;
+        if(inpEl.value == rems(trans.english)){
+            divToAdd.querySelector("input[type=checkbox]").checked=true;
+            //divToAdd.querySelectorAll("#validate|" + rems(trans.english)).checked=true;
+        }
     }
     divEl.appendChild(inpEl);
     divToAdd.appendChild(divEl);
