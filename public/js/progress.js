@@ -26,7 +26,11 @@ const updateProgressBar = () => {
             numberOfUpdatedKeys++;
         }
     }
-    progressTextElement.innerHTML = numberOfUpdatedKeys + " / " + numberOfTotalKeys + " keys updated";
+    let progressText = numberOfUpdatedKeys + " / " + numberOfTotalKeys + " keys updated";
+    const numberOfPhrasesAlreadyTranslated = Object.keys(alreadyTranslated).length;
+    if(numberOfPhrasesAlreadyTranslated >0)
+        progressText += " (" + numberOfPhrasesAlreadyTranslated + ") translated previously"
+    progressTextElement.innerHTML = progressText;
     progressElement.value = numberOfUpdatedKeys;
 
     manageCompleteness(numberOfUpdatedKeys, numberOfTotalKeys);

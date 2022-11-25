@@ -36,7 +36,7 @@ analyseInputJson = (file) => {
         let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
         writeHeader();
         writeDom(JSON.parse(paginatedData));
-        writePagination();
+        
     });
     reader.readAsText(file);
 

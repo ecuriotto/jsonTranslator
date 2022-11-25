@@ -41,6 +41,7 @@ let writePaginatedData = async (pageIndex) => {
     writeDom(JSON.parse(paginatedData));
 }
 
+/*
 let writePagination = () => {
     if(totalPages >100){
         let ul = document.createElement("ul");
@@ -53,7 +54,6 @@ let writePagination = () => {
         btnDiv.classList.add("are-small");
         //btnDiv.setAttribute("display","table");
 
-        /* First */
         let btnFirst = document.createElement("button");
         btnFirst.classList.add("button");
         //btnFirst.classList.add("is-link");
@@ -112,19 +112,9 @@ let writePagination = () => {
         btnDiv.appendChild(inputPage);
         btnDiv.appendChild(btnNext);
         btnDiv.appendChild(btnLast);
-        for(let i=0; i< totalPages; i++){/*
-            let li = document.createElement("li");
-            let a = document.createElement("a");
-            a.text = i;
-            //a.href="#"
-            a.setAttribute("id",i);
-            a.setAttribute("onclick","writePaginatedData("+i+")");
-            li.appendChild(a);
-            ul.appendChild(li);
-            */
 
-
-        }
         document.getElementById("pagination").appendChild(btnDiv)   
     }
+   
 }
+*/
