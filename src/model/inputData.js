@@ -14,7 +14,13 @@ function initVar(){
 
 savePhrasesInFile = (body) =>{
     alreadyTranslated=[];
-    translatedByUserSavedInDraft = body["***MYTRANS***"];
+    /*
+    if(Object.keys(translatedByUserSavedInDraft).length > 0)
+        translatedByUserSavedInDraft = body["***MYTRANS***"];
+    else
+        translatedByUserSavedInDraft = {...translatedByUserSavedInDraft, ...body["***MYTRANS***"]}
+    */
+    translatedByUserSavedInDraft = {...translatedByUserSavedInDraft, ...body["***MYTRANS***"]}    
     if(!translatedByUserSavedInDraft){
         translatedByUserSavedInDraft = {}
     }
@@ -80,11 +86,37 @@ saveDataFromFile = async (body, lang) =>{
     return output;
 }
 
+savePreviousVersionTrans = async (body, lang) =>{
+    languageCode = lang;
+    savePreviousVersionTransRec(body)
+    translatedByUserSavedInDraft=body;
+    previousVersionPhrasesNumber = Object.keys(body).length;
+    let output = {"previousVersionPhrasesNumber":previousVersionPhrasesNumber};
+    return output;
+}
+
+savePreviousVersionTransRec = (body) =>{  
+    for(let key in body){
+        let val = body[key];
+        if(typeof val == "string"){
+            if(translatedByUserSavedInDraft[val.replace(/\s/g, "")]){
+                alreadyTranslated.push(val)
+            }
+            else{
+                phrasesInFile.push(val)
+            }        
+        }
+        else{
+            savePhrasesInFileRec(val)
+        }    
+    }
+}
+
 getDataFromFile = () =>{ 
     return fileMatchesWithFirestore
 }
 getTranslatedByUserSavedInDraft = () =>{ 
     return translatedByUserSavedInDraft;
 }
-module.exports = {saveDataFromFile, getDataFromFile, getTranslatedByUserSavedInDraft} 
+module.exports = {saveDataFromFile, getDataFromFile, getTranslatedByUserSavedInDraft, savePreviousVersionTrans} 
 
