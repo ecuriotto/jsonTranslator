@@ -3,12 +3,21 @@
  
     <div id="myData" class="p-2"></div>
     <script>
+
+      const fileSelectorPrev = document.getElementById('file-selector-prev');
+        fileSelectorPrev.addEventListener('change', (event) => {
+              cleanMyData();
+              const file = event.target.files[0];
+              savePrevPhrases(file);
+              nextStep(2);
+      });
+
       const fileSelector = document.getElementById('file-selector');
       fileSelector.addEventListener('change', (event) => {
         cleanMyData();
         const file = event.target.files[0];
         analyseInputJson(file);
-        nextStep(2);
+        nextStep(3);
 
       });
 

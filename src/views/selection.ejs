@@ -31,12 +31,34 @@
             <li class="steps-segment">
               <span class="steps-marker"></span>
               <div class="steps-content">
-                <p class="is-size-4">Step 2</p>
-                Select a json file from one of these sources
+                <p class="is-size-4">Step 2 (Optional)</p>
+                Does a previous translation exist?
                 <div class="file">
                     <label class="file-label">
 <!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
-                      <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json">
+                      <input class="file-input" file-selector type="file" id="file-selector-prev" name="file-selector-prev" accept=".json">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Select a previous translation file
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+
+              </div>
+            </li>
+            <li class="steps-segment">
+              <span class="steps-marker"></span>
+              <div class="steps-content">
+                <p class="is-size-4">Step 3</p>
+                Select the latest json file to translate
+                <div class="file">
+                    <label class="file-label">
+<!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
+                      <input class="file-input" file-selector type="file" id="file-selector" name="file-selector" accept=".json">
 
                       <span class="file-cta">
                         <span class="file-icon">
@@ -54,14 +76,14 @@
             <li class="steps-segment">
               <span class="steps-marker"></span>
               <div class="steps-content">
-                <p class="is-size-4">Step 3</p>
-                <p>Translate.... </p>               
+                <p class="is-size-4">Step 4</p>
+                <p>Translate... And save as a draft if you are tired </p>               
               </div>
             </li>
             <li class="steps-segment">
               <span class="steps-marker"></span>
               <div class="steps-content">
-                <p class="is-size-4">Step 4</p>
+                <p class="is-size-4">Step 5</p>
                 <button class="button draft-button is-focus" id="save" value="Save as draft">Save as a draft</button>
                 <div hidden class="field">
                     <input id="draftSwitch" type="checkbox" name="draftSwitch" class="switch is-rtl" hidden>

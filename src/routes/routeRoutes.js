@@ -14,6 +14,7 @@ router.get('/', function (req, res) {
 router.post('/saveDataFromFile/:lang',routeController.saveDataFromFile);
 router.get('/getData/:lang',routeController.getData)
 router.post('/saveInFirestore/:lang',routeController.saveInFirestore);
+router.post('/savePreviousVersionTrans/:lang',routeController.savePreviousVersionTrans);
 
 // Export router
 module.exports = router;

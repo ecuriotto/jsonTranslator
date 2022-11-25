@@ -20,8 +20,20 @@ saveDataFromFile = async (request, response) => {
     console.log('controller saveDataFromFile.......')
     const languageCode = request.params.lang;
     const numberOfPhrases = await InputData.saveDataFromFile(request.body, languageCode);
-    console.log('controller saveDataFromFile data are saved.......')
+    //console.log('controller saveDataFromFile data are saved.......')
     response.send({ numberOfPhrases: numberOfPhrases });
+}
+
+savePreviousVersionTrans = async (request, response) => {
+    //Called when we upload the file
+    console.log('controller savePreviousTrans.......')
+    
+    languageCode = request.params.lang;
+    const numberOfPhrases = await InputData.savePreviousVersionTrans(request.body, languageCode);
+    console.log('controller savePreviousTrans data are saved.......')
+    response.send(numberOfPhrases);
+    
+    
 }
 
 saveInFirestore = async (request, response) => {
@@ -36,4 +48,4 @@ saveInFirestore = async (request, response) => {
     response.status(204).send('Status: Ok');
 }
 
-module.exports = { saveDataFromFile, getData, saveInFirestore, getTranslatedByUserSavedInDraft }
+module.exports = { saveDataFromFile, getData, saveInFirestore, savePreviousVersionTrans }

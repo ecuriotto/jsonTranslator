@@ -1,7 +1,7 @@
 let myData = {};
 //number of unique phrases to translate in the file
 let numberOfTotalKeys = 0;
-const getDataUrl = "http://localhost:7070/getData/";
+const URL = "http://localhost:7070/";
 const helperKeyword = "automatic-help";
 const userKeyword = "my-translation"
 const helperColor = "has-text-link"
@@ -26,14 +26,14 @@ analyseInputJson = (file) => {
         fileName = file.name;
         let myDataRaw = event.target.result
 
-        numberOfTotalKeysObj = await makeRequest("POST", "http://localhost:7070/saveDataFromFile/" + languageSelection.code, myDataRaw);
+        numberOfTotalKeysObj = await makeRequest("POST", URL+ "saveDataFromFile/" + languageSelection.code, myDataRaw);
         let numberOfPhrases = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
         numberOfTotalKeys = numberOfPhrases.total;
         alreadyTranslated = numberOfPhrases.alreadyTranslated;
         numberOfUpdatedKeysInit = Object.keys(alreadyTranslated).length;
         totalPages = Math.ceil(numberOfTotalKeys / limit)
         page = 0;
-        let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
+        let paginatedData = await makeRequest("GET", URL + "/getData/" + languageSelection.code, null, "page=" + page + "&limit=" + limit);
         writeHeader();
         writeDom(JSON.parse(paginatedData));
         
@@ -149,7 +149,7 @@ saveInFirestore= () => {
         }
     }
     if(Object.keys(correctMachineTranslations).length > 0){
-        makeRequest("POST", "http://localhost:7070/saveInFirestore/" + languageSelection.code, JSON.stringify(correctMachineTranslations));
+        makeRequest("POST", URL + "saveInFirestore/" + languageSelection.code, JSON.stringify(correctMachineTranslations));
     }
 }
 
