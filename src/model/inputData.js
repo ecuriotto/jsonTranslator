@@ -11,23 +11,7 @@ function initVar(){
     fileMatchesWithFirestore = {};
 }
 
-/*
-savePhrasesInFileRec = (body) =>{    
-    for(let key in body){
-        if(key=="***MYTRANS***"){
-            translatedByUserSavedInDraft = body[key];
-            break;
-        }
-        let val = body[key];
-        if(typeof val == "string"){
-            phrasesInFile.push(val)
-        }
-        else{
-            savePhrasesInFileRec(val)
-        }    
-    }
-}
-*/
+
 savePhrasesInFile = (body) =>{
     alreadyTranslated=[];
     translatedByUserSavedInDraft = body["***MYTRANS***"];
@@ -37,15 +21,15 @@ savePhrasesInFile = (body) =>{
     savePhrasesInFileRec(body);
     phrasesInFile = phrasesInFile.concat(alreadyTranslated);
 }
-savePhrasesInFileRec = (body) =>{  
 
+savePhrasesInFileRec = (body) =>{  
     for(let key in body){
         if(key=="***MYTRANS***"){
             break;
         }
         let val = body[key];
         if(typeof val == "string"){
-            if(translatedByUserSavedInDraft[val]){
+            if(translatedByUserSavedInDraft[val.replace(/\s/g, "")]){
                 alreadyTranslated.push(val)
             }
             else{
@@ -60,8 +44,16 @@ savePhrasesInFileRec = (body) =>{
 
 prepareAdditionalData = async () => {
 
-        const firestoreExistingPhrases = await FirestoreClient.getExistingPhrasesFromFirestore(languageCode);
-        const firestoreExistingPhrasesData = firestoreExistingPhrases.data();
+        let firestoreExistingPhrasesData = [];
+        try{
+            const firestoreExistingPhrases = await FirestoreClient.getExistingPhrasesFromFirestore(languageCode);
+            firestoreExistingPhrasesData = firestoreExistingPhrases.data();
+        }
+        catch(err){
+            console.log("Error with Firestore");
+        }
+        
+        
     
         let firestoreExistingPhrasesKeysUpper = Object.keys(firestoreExistingPhrasesData).map(firePhrase => firePhrase.toUpperCase())
         phrasesInFile.filter(function(filePhrase) {
@@ -84,7 +76,7 @@ saveDataFromFile = async (body, lang) =>{
     await prepareAdditionalData()
     let output = {};
     output["total"]=Object.keys(fileMatchesWithFirestore).length
-    output["alreadyTranslated"]=Object.keys(translatedByUserSavedInDraft).length
+    output["alreadyTranslated"]=translatedByUserSavedInDraft;
     return output;
 }
 

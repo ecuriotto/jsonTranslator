@@ -42,7 +42,9 @@ let createDraft = () => {
             humanTranslations[rems(eng.value)] = myTrans.value
         }
     }
-    savedData["***MYTRANS***"] = humanTranslations
+    //merge the translations done by user in the previous draft with the actual one
+    const mergedTranslations = {alreadyTranslated, ...humanTranslations}
+    savedData["***MYTRANS***"] = mergedTranslations
     jsonToSave = savedData
 } 
 

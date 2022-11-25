@@ -26,8 +26,14 @@ saveDataFromFile = async (request, response) => {
 
 saveInFirestore = async (request, response) => {
     const languageCode = request.params.lang;
-    await FirestoreClient.saveByPath(languageCode, request.body);
+    try{
+        await FirestoreClient.saveByPath(languageCode, request.body);
+    }
+    catch(err){
+        console.log("Error Saving translations into firestore. It's not blocking but there could be other issues around");
+    }    
+    
     response.status(204).send('Status: Ok');
 }
 
-module.exports = { saveDataFromFile, getData, saveInFirestore }
+module.exports = { saveDataFromFile, getData, saveInFirestore, getTranslatedByUserSavedInDraft }

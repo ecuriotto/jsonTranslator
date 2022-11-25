@@ -16,7 +16,7 @@ let fileName = "translation.json"
 let numberOfTotalKeysObj;
 
 let numberOfUpdatedKeysInit = 0; //how many keys are already translated at the beginning (DRAFT)
-
+let alreadyTranslated = {}; //when importing a draft we store here the previously user translated phrases
 //This function can either be used to write the form based on the json, or to update the json with the translated data
 analyseInputJson = (file) => {
 
@@ -29,8 +29,10 @@ analyseInputJson = (file) => {
         numberOfTotalKeysObj = await makeRequest("POST", "http://localhost:7070/saveDataFromFile/" + languageSelection.code, myDataRaw);
         let numberOfPhrases = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
         numberOfTotalKeys = numberOfPhrases.total;
-        numberOfUpdatedKeysInit = numberOfPhrases.alreadyTranslated;
+        alreadyTranslated = numberOfPhrases.alreadyTranslated;
+        numberOfUpdatedKeysInit = Object.keys(alreadyTranslated).length;
         totalPages = Math.ceil(numberOfTotalKeys / limit)
+        page = 0;
         let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
         writeHeader();
         writeDom(JSON.parse(paginatedData));
