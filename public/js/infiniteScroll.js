@@ -27,7 +27,7 @@ const handleInfiniteScroll = async () => {
 
         if (endOfPage) {
             page = page + 1;
-            let paginatedData = await makeRequest("GET", getDataUrl + languageSelection.code, null, "page=" + page + "&limit=" + limit);
+            let paginatedData = await makeRequest("GET", "/getData/"+ languageSelection.code, null, "page=" + page + "&limit=" + limit);
             writeDom(JSON.parse(paginatedData));
         }
         if (page >= totalPages - 1) {

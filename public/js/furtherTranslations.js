@@ -5,7 +5,7 @@ savePrevPhrases = (file) =>{
         fileName = file.name;
         let myDataRaw = event.target.result
 
-        numberOfTotalKeysObj = await makeRequest("POST", URL + "savePreviousVersionTrans/" + languageSelection.code, myDataRaw);
+        numberOfTotalKeysObj = await makeRequest("POST", "/savePreviousVersionTrans/" + languageSelection.code, myDataRaw);
         console.log("Phrases in the previous version " + JSON.parse(numberOfTotalKeysObj).previousVersionPhrasesNumber.previousVersionPhrasesNumber)
         /*
         let numberOfPhrases = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
