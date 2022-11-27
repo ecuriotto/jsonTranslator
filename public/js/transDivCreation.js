@@ -12,7 +12,19 @@ writeHeader = () => {
     divData = document.getElementById("myData");
     let divToAdd = document.createElement('div');
     divToAdd.className = "columns";
-
+/*
+    let divHeader0 = document.createElement('div')
+    let divHeader0Top = document.createElement('div')
+    divHeader0.classList.add("column");
+    divHeader0.classList.add(textInputSizeClass)
+    divHeader0Top.classList.add("has-text-centered")
+    let labelHeader0 = document.createElement('label')
+    labelHeader0.classList.add(bulmaLabelTextColor)
+    labelHeader0.innerHTML = "Key"
+    divHeader0.appendChild(divHeader0Top)
+    divHeader0Top.setAttribute("type", "hidden");
+    divHeader0Top.appendChild(labelHeader0)
+*/
     let divHeader1 = document.createElement('div')
     let divHeader1Top = document.createElement('div')
     divHeader1.classList.add("column");
@@ -57,24 +69,47 @@ writeHeader = () => {
     divHeader4.appendChild(divHeader4Top)
     divHeader4Top.appendChild(labelHeader4)
 
+    //divToAdd.appendChild(divHeader0);
     divToAdd.appendChild(divHeader1);
     divToAdd.appendChild(divHeader2);
     divToAdd.appendChild(divHeader3);
     divToAdd.appendChild(divHeader4);
     divData.appendChild(divToAdd);
 }
-writeInputEng = (trans) => {
+
+writeInputKey = (trans) => {
     let divToAdd = document.createElement('div');
     divToAdd.className = "columns";
+    let divEl = document.createElement('div')
+    divEl.hidden = true;
+    //divEl.classList.add("column");
+    //divEl.setAttribute("display", "none");
+    divEl.classList.add(textInputSizeClass)
+    let inpEl = document.createElement("label");
+    inpEl.className = "textarea is-primary"
+    inpEl.setAttribute("rows", calculaterows(trans.key.length))
+    //inpEl.setAttribute("rows", calculaterows(trans.eng.length))
+    inpEl.value = trans.key;
+    inpEl.setAttribute("visibility", "hidden");
+    inpEl.readonly = true
+    inpEl.setAttribute("id", "key|" + rems(trans.key))
+    divEl.appendChild(inpEl);
+    divToAdd.appendChild(divEl);
+    return divToAdd;
+}
+
+writeInputEng = (trans, divToAdd) => {
+    //divToAdd = document.createElement('div');
+    //divToAdd.className = "columns";
     let divEl = document.createElement('div')
     divEl.classList.add("column");
     divEl.classList.add(textInputSizeClass)
     let inpEl = document.createElement("textarea");
     inpEl.className = "textarea is-primary"
-    inpEl.setAttribute("rows", calculaterows(trans.english.length))
-    inpEl.value = trans.english;
+    inpEl.setAttribute("rows", calculaterows(trans.eng.length))
+    inpEl.value = trans.eng;
     inpEl.readOnly = true
-    inpEl.setAttribute("id", "eng|" + rems(trans.english))
+    inpEl.setAttribute("id", "eng|" + rems(trans.key))
     divEl.appendChild(inpEl);
     divToAdd.appendChild(divEl);
     return divToAdd;
@@ -86,10 +121,10 @@ writeMachineTranslation = (trans, divToAdd) => {
     divEl.classList.add(textInputSizeClass)
     let inpEl = document.createElement("textarea");
     inpEl.className = "textarea is-link";
-    inpEl.setAttribute("rows", calculaterows(trans.english.length));
-    inpEl.setAttribute("id", "machineTrans|" + rems(trans.english));
+    inpEl.setAttribute("rows", calculaterows(trans.eng.length));
+    inpEl.setAttribute("id", "machineTrans|" + rems(trans.key));
     inpEl.setAttribute("name", "machineTrans");
-    inpEl.value = trans.machineTranslation;
+    inpEl.value = trans.suggestedTrans;
     inpEl.readOnly = true;
     divEl.appendChild(inpEl);
     divToAdd.appendChild(divEl);
@@ -132,12 +167,13 @@ writeMyTranslation = (trans, divToAdd) => {
     divEl.classList.add(textInputSizeClass)
     let inpEl = document.createElement("textarea");
     inpEl.className = "textarea is-link";
-    inpEl.setAttribute("rows", calculaterows(trans.english.length))
-    inpEl.setAttribute("id", "myTrans|" + rems(trans.english))
+    inpEl.setAttribute("rows", calculaterows(trans.eng.length))
+    inpEl.setAttribute("id", "myTrans|" + rems(trans.key))
     inpEl.setAttribute("name", "myTrans");
-    if(trans.myTranslation){
-        inpEl.value = trans.myTranslation;
-        if(inpEl.value == trans.machineTranslation){
+    //TODO CHANGE myTranslation
+    if(trans.previouslyTranslated){
+        inpEl.value = trans.previouslyTranslated;
+        if(inpEl.value == trans.suggestedTrans){
             divToAdd.querySelector("input[type=checkbox]").checked=true;
         }
     }
@@ -150,9 +186,10 @@ writeDom = (paginatedData) => {
     divData = document.getElementById("myData");
 
     for (let trans of paginatedData) {
-        let divToAdd = writeInputEng(trans);
+        let divToAdd = writeInputKey(trans);
+        divToAdd = writeInputEng(trans, divToAdd);
         divToAdd = writeMachineTranslation(trans, divToAdd);
-        divToAdd = writeAcceptMachineTranslation(trans.english, divToAdd);
+        divToAdd = writeAcceptMachineTranslation(trans.key, divToAdd);
         divToAdd = writeMyTranslation(trans, divToAdd);
         divData.appendChild(divToAdd);
     }

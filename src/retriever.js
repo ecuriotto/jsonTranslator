@@ -2,39 +2,48 @@ const InputData = require('./model/inputData')
 const GoogleTranslateClient = require('./googleTranslateClient')
 const FirestoreClient = require('./firestoreClient')
 
-getData = async (languageCode, page, limit) =>{ 
+let languageCode = "";
+let countGoogleCalls = 0;
+
+getGoogleTranslation = async (phrase) => {
+    
+    countGoogleCalls +=1;
+    console.log(phrase.eng);
+    let machineTrans = await GoogleTranslateClient.translateText(phrase.eng, this.languageCode)
+    phrase.suggestedTrans = machineTrans[0];
+    saveGoogleTransInFirestore(languageCode, phrase.eng, phrase.suggestedTrans)
+    return phrase;
+}
+
+saveGoogleTransInFirestore = async (eng, trans) =>{
+    let toSaveInFirestore= {}
+    toSaveInFirestore[eng] = trans;
+    FirestoreClient.saveByPath(languageCode, toSaveInFirestore);
+}
+
+getData = async (languageCode, page, limit) =>{
+    this.languageCode = languageCode;
+    countGoogleCalls = 0;
     console.time();
-    let fileMatchesWithFirestore = InputData.getDataFromFile();
-    let translatedByUserSavedInDraft = InputData.getTranslatedByUserSavedInDraft();
-    let paginatedKeys = Object.keys(fileMatchesWithFirestore).slice(limit * page, limit * (page + 1))
-    let paginatedData = []
-    let countGoogleCalls = 0;  
-    for(key of paginatedKeys){
-        let singleEntry = {}
-        singleEntry["english"] = key;
-        if(fileMatchesWithFirestore[key] == ""){
-            //we get the translation from google and we save it to firestore
-            countGoogleCalls +=1;
-            let machineTrans = await GoogleTranslateClient.translateText(key, languageCode)
-            singleEntry["machineTranslation"] = machineTrans[0];
-            let toSaveInFirestore= {}
-            toSaveInFirestore[key] = singleEntry["machineTranslation"];
-            console.log(toSaveInFirestore);
-            FirestoreClient.saveByPath(languageCode, toSaveInFirestore);
-        }
-        else{
-            singleEntry["machineTranslation"] = fileMatchesWithFirestore[key]
-        }
-        let phraseToTranslateTrimmed = key.replace(/\s/g, "")
-        if(translatedByUserSavedInDraft[phraseToTranslateTrimmed]){
-            singleEntry["myTranslation"] = translatedByUserSavedInDraft[phraseToTranslateTrimmed];
-        }
-        paginatedData.push(singleEntry);   
-    }    
-    console.log(paginatedData);
+    //let fileMatchesWithFirestore = InputData.getDataFromFile();
+    //let translatedByUserSavedInDraft = InputData.getTranslatedByUserSavedInDraft();
+    let phrases = InputData.getPhrases();
+    let paginatedPhrases = phrases.slice(limit * page, limit * (page + 1))
+    
+    let paginatedPhrasesUpd = [];
+    for(let phrase of paginatedPhrases){
+        if(!phrase.inFirestore){
+            phrase = await getGoogleTranslation(phrase);
+        }    
+        paginatedPhrasesUpd.push(phrase);
+    }
+
     console.log(`${countGoogleCalls} Google translation calls done`)
     console.timeEnd();
-    return paginatedData;
+    for(const p of paginatedPhrasesUpd){
+        p.print();
+    }
+    return paginatedPhrasesUpd;
 }
 
 

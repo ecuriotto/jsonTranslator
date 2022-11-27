@@ -38,8 +38,8 @@ let createDraft = () => {
     for (let myTrans of document.getElementsByName("myTrans")) {
         if (myTrans.value && myTrans.value != "") {
             let rootId = myTrans.id.split("|")[1];
-            let eng = document.getElementById("eng|" + rootId);
-            humanTranslations[rems(eng.value)] = myTrans.value
+            let key = document.getElementById("key|" + rootId);
+            humanTranslations[key.value] = myTrans.value
         }
     }
     //merge the translations done by user in the previous draft with the actual one
