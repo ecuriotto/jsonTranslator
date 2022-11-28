@@ -3,10 +3,11 @@ const Phrase = require('../model/phrase');
 
 let phrases = [];
 let translatedByUserSavedInDraft = {};
-let alreadyTranslated=[];
+let alreadyTranslatedInPreviousVersion=[];
 let fileMatchesWithFirestore = {};
 let languageCode = '';
 let orderCount = 0;
+let orderId = 100000;
 
 function initVar(){
     phrases = [];
@@ -16,14 +17,35 @@ function initVar(){
 
 
 savePhrasesInFile = (body) =>{
-    alreadyTranslated=[];
-
+    
     translatedByUserSavedInDraft = {...translatedByUserSavedInDraft, ...body["***MYTRANS***"]}    
     if(!translatedByUserSavedInDraft){
         translatedByUserSavedInDraft = {}
     }
     savePhrasesInFileRec(body);
-    phrases = phrases.concat(alreadyTranslated);
+    //TODO MERGE THE TWO OBJECTS
+    //phrases = phrases.concat(alreadyTranslatedInPreviousVersion);
+    let phrasesUpd = []
+    for(let phrase of phrases){
+        let newPhrase = new Phrase();
+        let matchPhrase = alreadyTranslatedInPreviousVersion.find(obj =>{
+            if(obj.key == phrase.key) 
+                return obj;
+            else
+                return undefined;    
+        })
+        if(matchPhrase){
+            newPhrase = matchPhrase;
+            //newPhrase.suggestedTrans = matchPhrase.previouslyTranslated;
+            newPhrase.eng = phrase.eng;
+        }    
+        else{
+            newPhrase = phrase;
+        }    
+        phrasesUpd.push(newPhrase);
+    }
+    phrases = phrasesUpd;
+
 }
 
 savePhrasesInFileRec = (body) =>{  
@@ -68,7 +90,6 @@ prepareAdditionalData = async () => {
         catch(err){
             console.error("Error with Firestore");
         }
-
 }
 
 sortPhrases = () =>{
@@ -81,6 +102,8 @@ sortPhrases = () =>{
             
         
         if(a.previouslyTranslated.length == 0 && b.previouslyTranslated.length > 0) return -1;
+
+
         
     });
 }
@@ -91,9 +114,7 @@ saveDataFromFile = async (body, lang) =>{
     savePhrasesInFile(body);
     await prepareAdditionalData()
     sortPhrases();
-    for(let cipo of phrases){
-        cipo.print();
-    }
+
     let output = {};
     output["total"]=Object.keys(phrases).length
     output["alreadyTranslated"]=translatedByUserSavedInDraft;
@@ -105,26 +126,29 @@ saveDataFromFile = async (body, lang) =>{
 
 savePreviousVersionTrans = async (body, lang) =>{
     languageCode = lang;
-    savePreviousVersionTransRec(body)
-    translatedByUserSavedInDraft=body;
+    alreadyTranslatedInPreviousVersion=[];
+    orderId = 100000;
     previousVersionPhrasesNumber = Object.keys(body).length;
+    savePreviousVersionTransRec(body);
     let output = {"previousVersionPhrasesNumber":previousVersionPhrasesNumber};
     return output;
 }
 
-savePreviousVersionTransRec = (body) =>{  
+savePreviousVersionTransRec = (body) =>{
+    
     for(let key in body){
         let val = body[key];
         if(typeof val == "string"){
-            if(translatedByUserSavedInDraft[val.replace(/\s/g, "")]){
-                alreadyTranslated.push(val)
-            }
-            else{
-                phrases.push(val)
-            }        
+
+            phrase = new Phrase(key, "")
+            phrase.previouslyTranslated = val;
+            phrase.inFirestore = true;
+            orderId = orderId + 1; 
+            phrase.orderId = orderId;   
+            alreadyTranslatedInPreviousVersion.push(phrase);    
         }
         else{
-            savePhrasesInFileRec(val)
+            savePreviousVersionTransRec(val)
         }    
     }
 }
@@ -132,9 +156,6 @@ getPhrases = () =>{
     return phrases;
 }
 
-getDataFromFile = () =>{ 
-    return fileMatchesWithFirestore
-}
 getTranslatedByUserSavedInDraft = () =>{ 
     return translatedByUserSavedInDraft;
 }

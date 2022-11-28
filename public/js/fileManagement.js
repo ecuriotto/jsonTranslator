@@ -15,8 +15,8 @@ let saveOutputJson = () => {
 let createFinalFile = (jsonToSave) => {
     for (const key in jsonToSave) {
         if (typeof jsonToSave[key] == "string") {
-            let phraseToTranslate = jsonToSave[key];
-            let myTransEl = document.getElementById("myTrans|" + rems(phraseToTranslate));
+
+            let myTransEl = document.getElementById("myTrans|" + key);
             if(myTransEl){
                 let phraseTranslated = myTransEl.value; 
                 jsonToSave[key] = phraseTranslated;

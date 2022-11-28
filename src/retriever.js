@@ -11,14 +11,14 @@ getGoogleTranslation = async (phrase) => {
     console.log(phrase.eng);
     let machineTrans = await GoogleTranslateClient.translateText(phrase.eng, this.languageCode)
     phrase.suggestedTrans = machineTrans[0];
-    saveGoogleTransInFirestore(languageCode, phrase.eng, phrase.suggestedTrans)
+    saveGoogleTransInFirestore(this.languageCode, phrase.eng, phrase.suggestedTrans)
     return phrase;
 }
 
 saveGoogleTransInFirestore = async (eng, trans) =>{
     let toSaveInFirestore= {}
     toSaveInFirestore[eng] = trans;
-    FirestoreClient.saveByPath(languageCode, toSaveInFirestore);
+    FirestoreClient.saveByPath(this.languageCode, toSaveInFirestore);
 }
 
 getData = async (languageCode, page, limit) =>{
