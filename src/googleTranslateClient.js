@@ -2,11 +2,11 @@ const Translate = require('@google-cloud/translate').v2;
 const path = require('path');
 // Creates a client
 class GoogleTranslateClient {
-  constructor(){
+  constructor() {
     this.translate = new Translate.Translate({
       projectId: 'enrico-curiotto',
-      keyFilename: path.join(__dirname, '..', 'serviceAccount/service-account.json')
-    })  
+      keyFilename: path.join(__dirname, '..', 'serviceAccount/service-account.json'),
+    });
   }
   async translateText(text, target) {
     // Translates the text into the target language. "text" can be a string for
@@ -18,7 +18,4 @@ class GoogleTranslateClient {
   }
 }
 
-
-
-
-module.exports = new GoogleTranslateClient()
+module.exports = new GoogleTranslateClient();
