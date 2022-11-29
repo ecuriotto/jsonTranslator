@@ -23,7 +23,7 @@ function savePhrasesInFile(body) {
   if (!translatedByUserSavedInDraft) {
     translatedByUserSavedInDraft = {};
   }
-  savePhrasesInFileRec(body);
+  savePhrasesInFileRec('', body);
   if (Object.keys(alreadyTranslatedInPreviousVersion).length > 0) {
     phrases = getMergedWithPreviousVersion();
   }
@@ -50,22 +50,26 @@ function getMergedWithPreviousVersion() {
   return phrasesUpd;
 }
 
-function savePhrasesInFileRec(body) {
-  for (let key in body) {
+function getFlatKey(keyRoot, key) {
+  return keyRoot + '^' + key;
+}
+function savePhrasesInFileRec(keyRoot, obj) {
+  for (let key in obj) {
     if (key == '***MYTRANS***') {
       break;
     }
-    let val = body[key];
+    let val = obj[key];
+    let flatKey = getFlatKey(keyRoot, key);
     if (typeof val == 'string') {
-      let phrase = new Phrase(key, val);
-      if (translatedByUserSavedInDraft[key]) {
-        phrase.previouslyTranslated = translatedByUserSavedInDraft[key];
+      let phrase = new Phrase(flatKey, val);
+      if (translatedByUserSavedInDraft[flatKey]) {
+        phrase.previouslyTranslated = translatedByUserSavedInDraft[flatKey];
       }
       orderCount += 1; //used for sorting
       phrase.orderId = orderCount;
       phrases.push(phrase);
     } else {
-      savePhrasesInFileRec(val);
+      savePhrasesInFileRec(flatKey, val);
     }
   }
 }

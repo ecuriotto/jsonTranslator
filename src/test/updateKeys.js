@@ -13,7 +13,9 @@ function jsonReader(dataAddress) {
     }
   });
 }
-
+function getFlatKey(keyRoot, key) {
+  return keyRoot + '^' + key;
+}
 let orig;
 let enrico;
 fs.readFile('./en-ufficiale-2.json', 'utf8', (error, data) => {
@@ -29,15 +31,16 @@ fs.readFile('./en-ufficiale-2.json', 'utf8', (error, data) => {
     }
     orig = JSON.parse(data);
     let origKeys = {};
-    iter(orig);
-    function iter(el) {
+    iter('', orig);
+    function iter(keyRoot, el) {
       for (let key in el) {
         let val = el[key];
+        let flatKey = getFlatKey(keyRoot, key);
         if (typeof val == 'string') {
           let valTrimmed = val.replace(/\s/g, '');
-          origKeys[valTrimmed] = key;
+          origKeys[valTrimmed] = flatKey;
         } else {
-          iter(val);
+          iter(flatKey, val);
         }
       }
     }
@@ -48,8 +51,8 @@ fs.readFile('./en-ufficiale-2.json', 'utf8', (error, data) => {
       let origKey = origKeys[key]; //Object.keys(origKeys).find((mykey) => origKeys[mykey] == key);
       enricoUpd[origKey] = enricoT[key];
     }
-    //console.log(enricoUpd);
-    console.log(origKeys);
+    console.log(JSON.stringify(enricoUpd, null, 4));
+    //console.log(origKeys);
   });
 });
 

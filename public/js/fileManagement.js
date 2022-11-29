@@ -1,9 +1,12 @@
 let isFinal = false;
 
+function getFlatKey(rootKey, key) {
+  return rootKey + '^' + key;
+}
 let saveOutputJson = () => {
   jsonToSave = myData;
   if (isFinal) {
-    createFinalFile(jsonToSave);
+    createFinalFile('', jsonToSave);
     delete jsonToSave['***MYTRANS***'];
   } else {
     createDraft();
@@ -15,17 +18,18 @@ let saveOutputJson = () => {
   );
   saveInFirestore();
 };
-const createFinalFile = (jsonToSave) => {
+const createFinalFile = (keyRoot, jsonToSave) => {
   for (const key in jsonToSave) {
+    let flatKey = getFlatKey(keyRoot, key);
     if (typeof jsonToSave[key] == 'string') {
-      let myTransEl = document.getElementById('myTrans|' + key);
+      let myTransEl = document.getElementById('myTrans|' + flatKey);
       if (myTransEl) {
         let phraseTranslated = myTransEl.value;
         jsonToSave[key] = phraseTranslated;
       }
     } else {
       //console.log(key + " - " + jsonOrigin[key]);
-      createFinalFile(jsonToSave[key]);
+      createFinalFile(flatKey, jsonToSave[key]);
     }
   }
 };
