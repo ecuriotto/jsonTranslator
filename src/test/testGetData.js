@@ -1,2 +1,2 @@
-const Retriever = require('../retriever');
-Retriever.getData("it",0,2);
+const Retriever = require("../retriever");
+Retriever.getData("it", 0, 2);

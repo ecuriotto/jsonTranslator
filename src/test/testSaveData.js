@@ -1,6 +1,6 @@
-const InputData = require('../model/inputData')
+const InputData = require("../model/inputData");
 let body = JSON.parse(
-    `{ 
+  `{ 
         "appName": "Optimize",
         "navigation": { 
           "homepage": "Home", 
@@ -19,6 +19,6 @@ let body = JSON.parse(
             "appName": "Optimize"
           } 
       }`
-) 
+);
 
 InputData.saveDataFromFile(body, "it");
