@@ -1,9 +1,9 @@
 const FirestoreClient = require('../firestoreClient');
 const Phrase = require('../model/phrase');
+const PreviousVersion = require('./previousVersion');
 
 let phrases = [];
 let translatedByUserSavedInDraft = {};
-let alreadyTranslatedInPreviousVersion = [];
 let fileMatchesWithFirestore = {};
 let languageCode = '';
 let orderCount = 0;
@@ -12,6 +12,7 @@ let orderId = 100000;
 function initVar() {
   phrases = [];
   fileMatchesWithFirestore = {};
+  translatedByUserSavedInDraft = {};
   orderCount = 0;
 }
 
@@ -24,12 +25,13 @@ function savePhrasesInFile(body) {
     translatedByUserSavedInDraft = {};
   }
   savePhrasesInFileRec('', body);
+  const alreadyTranslatedInPreviousVersion = PreviousVersion.getPreviousVersionTrans();
   if (Object.keys(alreadyTranslatedInPreviousVersion).length > 0) {
-    phrases = getMergedWithPreviousVersion();
+    phrases = getMergedWithPreviousVersion(alreadyTranslatedInPreviousVersion);
   }
 }
 
-function getMergedWithPreviousVersion() {
+function getMergedWithPreviousVersion(alreadyTranslatedInPreviousVersion) {
   //phrases = phrases.concat(alreadyTranslatedInPreviousVersion);
   let phrasesUpd = [];
   for (let phrase of phrases) {
@@ -133,31 +135,6 @@ async function saveDataFromFile(body, lang) {
   return output;
 }
 
-async function savePreviousVersionTrans(body, lang) {
-  languageCode = lang;
-  alreadyTranslatedInPreviousVersion = [];
-  orderId = 100000;
-  previousVersionPhrasesNumber = Object.keys(body).length;
-  savePreviousVersionTransRec(body);
-  let output = { previousVersionPhrasesNumber: previousVersionPhrasesNumber };
-  return output;
-}
-
-function savePreviousVersionTransRec(body) {
-  for (let key in body) {
-    let val = body[key];
-    if (typeof val == 'string') {
-      phrase = new Phrase(key, '');
-      phrase.previouslyTranslated = val;
-      phrase.inFirestore = true;
-      orderId = orderId + 1;
-      phrase.orderId = orderId;
-      alreadyTranslatedInPreviousVersion.push(phrase);
-    } else {
-      savePreviousVersionTransRec(val);
-    }
-  }
-}
 function getPhrases() {
   return phrases;
 }
@@ -168,6 +145,5 @@ function getTranslatedByUserSavedInDraft() {
 module.exports = {
   saveDataFromFile,
   getTranslatedByUserSavedInDraft,
-  savePreviousVersionTrans,
   getPhrases,
 };
