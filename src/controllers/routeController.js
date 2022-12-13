@@ -1,10 +1,11 @@
 //const translationsMaster = require('../translationsMaster')
 const InputData = require('../model/inputData');
 const PreviousVersion = require('../model/previousVersion');
+const Diff = require('../model/diff');
 const retriever = require('../retriever');
 const FirestoreClient = require('../firestoreClient');
 
-getData = async (request, response) => {
+const getData = async (request, response) => {
   console.log('controller getDataFromFile.......');
   const languageCode = request.params.lang;
   const page = parseInt(request.query.page);
@@ -15,7 +16,7 @@ getData = async (request, response) => {
   response.send(paginatedData);
 };
 
-saveDataFromFile = async (request, response) => {
+const saveDataFromFile = async (request, response) => {
   //Called when we upload the file
   console.log('controller saveDataFromFile.......');
   const languageCode = request.params.lang;
@@ -24,7 +25,7 @@ saveDataFromFile = async (request, response) => {
   response.send({ numberOfPhrases: numberOfPhrases });
 };
 
-savePreviousVersionTrans = async (request, response) => {
+const savePreviousVersionTrans = async (request, response) => {
   //Called when we upload the file
   console.log('controller savePreviousTrans.......');
 
@@ -37,7 +38,7 @@ savePreviousVersionTrans = async (request, response) => {
   response.send(numberOfPhrases);
 };
 
-saveInFirestore = async (request, response) => {
+const saveInFirestore = async (request, response) => {
   const languageCode = request.params.lang;
   try {
     await FirestoreClient.saveByPath(languageCode, request.body);
@@ -50,9 +51,21 @@ saveInFirestore = async (request, response) => {
   response.status(204).send('Status: Ok');
 };
 
+const saveDiff = async (request, response) => {
+  //Called when we upload the file
+  console.log('controller saveDiff.......');
+
+  //languageCode = request.params.lang;
+  const numberOfDiff = await Diff.parseDiffFile(request.body);
+  console.log('controller saveDiff data are saved.......');
+  console.log(`number of diff: ${numberOfDiff}`);
+  response.send({ numberOfDiff: numberOfDiff });
+};
+
 module.exports = {
   saveDataFromFile,
   getData,
   saveInFirestore,
   savePreviousVersionTrans,
+  saveDiff,
 };
