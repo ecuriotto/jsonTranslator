@@ -1,6 +1,7 @@
 <%- include('header') %>
   <%- include('selection') %>
- 
+
+    <div id="snackbar"></div>
     <div id="myData" class="p-2"></div>
     <script>
 
@@ -11,6 +12,16 @@
               savePrevPhrases(file);
               nextStep(2);
       });
+
+      const fileSelectorDiff = document.getElementById('file-selector-diff');
+        fileSelectorDiff.addEventListener('change', (event) => {
+          //cleanMyData();
+          const file = event.target.files[0];
+          console.log('before calling saveDiff')
+          saveDiff(file);
+          console.log('after calling saveDiff')
+          //nextStep(2);
+        });
 
       const fileSelector = document.getElementById('file-selector');
       fileSelector.addEventListener('change', (event) => {

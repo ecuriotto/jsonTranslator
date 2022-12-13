@@ -1,10 +1,12 @@
 //const translationsMaster = require('../translationsMaster')
-const InputData = require("../model/inputData");
-const retriever = require("../retriever");
-const FirestoreClient = require("../firestoreClient");
+const InputData = require('../model/inputData');
+const PreviousVersion = require('../model/previousVersion');
+const Diff = require('../model/diff');
+const retriever = require('../retriever');
+const FirestoreClient = require('../firestoreClient');
 
-getData = async (request, response) => {
-  console.log("controller getDataFromFile.......");
+const getData = async (request, response) => {
+  console.log('controller getDataFromFile.......');
   const languageCode = request.params.lang;
   const page = parseInt(request.query.page);
   const limit = parseInt(request.query.limit);
@@ -14,32 +16,29 @@ getData = async (request, response) => {
   response.send(paginatedData);
 };
 
-saveDataFromFile = async (request, response) => {
+const saveDataFromFile = async (request, response) => {
   //Called when we upload the file
-  console.log("controller saveDataFromFile.......");
+  console.log('controller saveDataFromFile.......');
   const languageCode = request.params.lang;
-  const numberOfPhrases = await InputData.saveDataFromFile(
-    request.body,
-    languageCode
-  );
+  const numberOfPhrases = await InputData.saveDataFromFile(request.body, languageCode);
   //console.log('controller saveDataFromFile data are saved.......')
   response.send({ numberOfPhrases: numberOfPhrases });
 };
 
-savePreviousVersionTrans = async (request, response) => {
+const savePreviousVersionTrans = async (request, response) => {
   //Called when we upload the file
-  console.log("controller savePreviousTrans.......");
+  console.log('controller savePreviousTrans.......');
 
   languageCode = request.params.lang;
-  const numberOfPhrases = await InputData.savePreviousVersionTrans(
+  const numberOfPhrases = await PreviousVersion.savePreviousVersionTrans(
     request.body,
     languageCode
   );
-  console.log("controller savePreviousTrans data are saved.......");
+  console.log('controller savePreviousTrans data are saved.......');
   response.send(numberOfPhrases);
 };
 
-saveInFirestore = async (request, response) => {
+const saveInFirestore = async (request, response) => {
   const languageCode = request.params.lang;
   try {
     await FirestoreClient.saveByPath(languageCode, request.body);
@@ -49,7 +48,18 @@ saveInFirestore = async (request, response) => {
     );
   }
 
-  response.status(204).send("Status: Ok");
+  response.status(204).send('Status: Ok');
+};
+
+const saveDiff = async (request, response) => {
+  //Called when we upload the file
+  console.log('controller saveDiff.......');
+
+  //languageCode = request.params.lang;
+  const numberOfDiff = await Diff.parseDiffFile(request.body);
+  console.log('controller saveDiff data are saved.......');
+  console.log(`number of diff: ${numberOfDiff}`);
+  response.send({ numberOfDiff: numberOfDiff });
 };
 
 module.exports = {
@@ -57,4 +67,5 @@ module.exports = {
   getData,
   saveInFirestore,
   savePreviousVersionTrans,
+  saveDiff,
 };
