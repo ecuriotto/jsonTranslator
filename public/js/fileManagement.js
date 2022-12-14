@@ -26,6 +26,8 @@ const createFinalFile = (keyRoot, jsonToSave) => {
       if (myTransEl) {
         let phraseTranslated = myTransEl.value;
         jsonToSave[key] = phraseTranslated;
+      } else if (alreadyTranslated.hasOwnProperty(flatKey)) {
+        jsonToSave[key] = alreadyTranslated[flatKey];
       }
     } else {
       //console.log(key + " - " + jsonOrigin[key]);

@@ -17,6 +17,7 @@ let numberOfTotalKeysObj;
 
 let numberOfUpdatedKeysInit = 0; //how many keys are already translated at the beginning (DRAFT)
 let alreadyTranslated = {}; //when importing a draft we store here the previously user translated phrases
+let alreadyTranslatedNumber = 0;
 //This function can either be used to write the form based on the json, or to update the json with the translated data
 let analyseInputJson = (file) => {
   const reader = new FileReader();
@@ -33,6 +34,7 @@ let analyseInputJson = (file) => {
     let numberOfPhrases = JSON.parse(numberOfTotalKeysObj).numberOfPhrases;
     numberOfTotalKeys = numberOfPhrases.total;
     alreadyTranslated = numberOfPhrases.alreadyTranslated;
+    alreadyTranslatedNumber = Object.keys(alreadyTranslated).length;
     numberOfUpdatedKeysInit = Object.keys(alreadyTranslated).length;
     totalPages = Math.ceil(numberOfTotalKeys / limit);
     page = 0;

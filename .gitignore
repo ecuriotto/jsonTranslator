@@ -2,3 +2,4 @@ backend
 node_modules
 .DS_Store
 serviceAccount/service-account.json
+src/views/selection_experiments.ejs
