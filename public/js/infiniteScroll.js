@@ -16,7 +16,7 @@ const removeInfiniteScroll = () => {
 };
 
 let infiniteScrollListenerFunction = () => {
-  let checkMyData = document.getElementById('myData');
+  let checkMyData = document.getElementById('dataGlobal');
   if (checkMyData && checkMyData.childNodes && checkMyData.childNodes.length > 0)
     handleInfiniteScroll();
 };

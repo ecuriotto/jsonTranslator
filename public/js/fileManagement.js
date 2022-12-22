@@ -1,9 +1,7 @@
-let isFinal = false;
-
 function getFlatKey(rootKey, key) {
   return rootKey + '^' + key;
 }
-let saveOutputJson = () => {
+let saveOutputJson = (isFinal) => {
   jsonToSave = myData;
   if (isFinal) {
     createFinalFile('', jsonToSave);

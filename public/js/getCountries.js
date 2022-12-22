@@ -1,7 +1,7 @@
 let languageSelection = {
-  language: "",
+  language: '',
   //TODO remove the hardcode
-  codeInternal: "it",
+  codeInternal: '',
   codeListener: function (val) {},
   set code(val) {
     this.codeInternal = val;
@@ -16,36 +16,37 @@ let languageSelection = {
 };
 
 languageSelection.registerListener(function (val) {
-  nextStep(1);
-  document.getElementById("file-selector").disabled = false;
+  showPanel(2);
+  cleanAll();
+  //document.getElementById("file-selector").disabled = false;
 });
 
 //Get Countries From Json File
 const searchcountry = async (searchBox) => {
-  const res = await fetch("../data/supported_languages.json");
+  const res = await fetch('../data/supported_languages.json');
   const countries = await res.json();
 
   //Get Entered Data
   let fits = countries.text.filter((country) => {
-    const regex = new RegExp(`^${searchBox}`, "gi");
+    const regex = new RegExp(`^${searchBox}`, 'gi');
     if (country.language.match(regex)) return country.language;
   });
 
   if (searchBox.length === 0) {
     fits = [];
-    countryList.innerHTML = "";
+    countryList.innerHTML = '';
   }
 
   outputHtml(fits);
 };
 
 const fillInputWithChoice = (language, code) => {
-  document.getElementById("search").value = language;
+  document.getElementById('search').value = language;
   languageSelection.language = language;
   languageSelection.code = code;
 
-  for (const el of document.getElementsByName("suggestion")) {
-    el.style.display = "none";
+  for (const el of document.getElementsByName('suggestion')) {
+    el.style.display = 'none';
   }
 };
 
@@ -66,8 +67,8 @@ const outputHtml = (fits) => {
      </div>
        `
       )
-      .join("");
+      .join('');
 
-    document.getElementById("countryList").innerHTML = html;
+    document.getElementById('countryList').innerHTML = html;
   }
 };

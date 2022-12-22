@@ -1,56 +1,135 @@
-#logo-section, #banner-section{
-    background-color:  #2d545e;
+
+:root,
+    :root.forest {
+        --bgcolor1: #2d545e;
+        --bgcolor2: #e1b382;
+        --bgcolor3: #7d8c90;
+        --bgcolor4: #464d4f;
+    }
+
+    :root.stylish {
+        --bgcolor1: #05386B;
+        --bgcolor2: #8EE4AF;
+        --bgcolor3: #0861bb;
+    }
+    :root.purple {
+        --bgcolor1: #2E1114;
+        --bgcolor2: #83677B;
+        --bgcolor3: #782e36;
+    }
+    :root.blackWhite {
+        --bgcolor1: black;
+        --bgcolor2: white;
+        --bgcolor3: rgb(94, 94, 94);
+    }
+    :root.striking {
+        --bgcolor1: #25274D;
+        --bgcolor2: #D1E8E2;
+        --bgcolor3: #258ca3;
+    }
+    :root.savana {
+        --bgcolor1: #46272b;
+        --bgcolor2: #CCCCCC;
+        --bgcolor3: #6f1f1f;
+    }
+
+#logo-section,
+#banner-section, #myData, .logo-color, .first-question {
+    background-color: var(--bgcolor1);
+}
+.second-question{
+    background-color: var(--bgcolor3);
+}
+.third-question {
+    background-color: var(--bgcolor1);
 }
 
-#selection-section, #progress-section{ 
-    background-color:  #e1b382;
+#selection-section, #pagination, textarea[name="myTrans"]
+ {
+    background-color: var(--bgcolor2)
 }
 
-#myData{
-    background-color: #2d545e;
-}
-
-textarea[name="myTrans"] {
-    background-color: #f0dfce;
-}
-
-.draft-button{
-    background-color: #427c8a;
-    color: #f0dfce;
-}
-
-.final-button{
-    background-color: #2d545e;
-    color: #fbf352;
-    animation: blinker 1.5s linear infinite;
-}
-
-.logo-color{
-    background-color:  #2d545e;
-}
-
-.paginationDiv{
-    display: inline-block;
-}
-
-.are-small{
-    white-space: nowrap;
-}
-
-#pagination{
-    background-color:  #e1b382;
-}
-
-#paginationInput{
-    width: 15%;
-}
-
-.paginationBtn:hover:not(.active) {
-    background-color: #2d545e;
+.draft-button, .final-button, .paginationBtn:hover:not(.active){
+    background-color: var(--bgcolor1);
     color: white;
 }
 
-#footer-section {
-    background-color: #e1b382;
+.paginationDiv {
+    display: inline-block;
 }
 
+.are-small {
+    white-space: nowrap;
+}
+
+
+#paginationInput {
+    width: 15%;
+}
+
+/* Hide the images by default */
+.not-showing-at-startup {
+    display: none;
+}
+
+#data-header {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--bgcolor2);
+
+}
+
+#dataGlobal {
+    height: 100%;
+}
+
+.fa-arrow-left{
+    color: var(--bgcolor1)
+}
+
+#select-theme-div{
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.animated {
+
+    animation: fadeIn 2s;
+    /*
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    */
+}
+
+/*
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+*/
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/*
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+*/

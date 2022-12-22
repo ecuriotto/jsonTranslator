@@ -1,111 +1,100 @@
 <section id="selection-section" class="section pb-1">
-    <div class="container">
-        <ul class="steps is-balanced">
-            <li class="steps-segment  is-active">
-              <span class="steps-marker"></span>
-              <div class="steps-content">
-                <p class="is-size-4">Step 1</p>
-                <p>Select a language you want to translate to. (AI will help you)</p>
+  <div class="tile is-ancestor p-2">
+    <div class="tile is-vertical is-4">
+      <article class="panel p-2">
+        <p class="panel-heading has-text-white first-question">
+          Select a language you want to translate to. (AI will help you)
+        </p>
 
+        <div class="panel-block" id="language">
+
+              <div class="steps-content">        
                 <div class="container">
-                    <div class="input-field col s6">
+                  <div class="input-field col s6">
                     <input placeholder="e.g French" id="search" type="text" class="validate" value="" />
-                    </div>
+                  </div>
                 </div>
                 <div id="countryList"></div>
-            </div>
-            </li>
-            <li class="steps-segment">
-              <span class="steps-marker"></span>
-              <div class="steps-content">
-                <p class="is-size-4">Step 2 (Optional)</p>
-                Does a previous translation exist?
-                <div class="file">
-                    <label class="file-label">
-<!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
-                      <input class="file-input" file-selector type="file" id="file-selector-prev" name="file-selector-prev" accept=".json">
-                      <span class="file-cta">
-                        <span class="file-icon">
-                          <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                          Select a previous translation file
-                        </span>
-                      </span>
-                    </label>
-                  </div>
+              </div>
+        </div>
 
-              </div>
-            </li>
-            <li class="steps-segment">
-              <span class="steps-marker"></span>
-              <div class="steps-content">
-                <p class="is-size-4">Step 2 (Optional)</p>
-                Diff file
-                <div class="file">
-                  <label class="file-label">
-                    <!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
-                    <input class="file-input" file-selector type="file" id="file-selector-diff" name="file-selector-diff">
-                    <span class="file-cta">
-                      <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                      </span>
-                      <span class="file-label">
-                        Select a diff file
-                      </span>
-                    </span>
-                  </label>
-                </div>           
-              </div>
-            </li>
-            <li class="steps-segment">
-              <span class="steps-marker"></span>
-              <div class="steps-content">
-                <p class="is-size-4">Step 3</p>
-                Select the latest json file to translate
-                <div class="file">
-                    <label class="file-label">
-<!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
-                      <input class="file-input" file-selector type="file" id="file-selector" name="file-selector" accept=".json">
-
-                      <span class="file-cta">
-                        <span class="file-icon">
-                          <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                          Choose a file…
-                        </span>
-                      </span>
-                    </label>
-                  </div>
-
-              </div>
-            </li>
-            <li class="steps-segment">
-              <span class="steps-marker"></span>
-              <div class="steps-content">
-                <p class="is-size-4">Step 4</p>
-                <p>Translate... And save as a draft if you are tired </p>               
-              </div>
-            </li>
-            <li class="steps-segment">
-              <span class="steps-marker"></span>
-              <div class="steps-content">
-                <p class="is-size-4">Step 5</p>
-                <button class="button draft-button is-focus" id="save" value="Save as draft">Save as a draft</button>
-                <div hidden class="field">
-                    <input id="draftSwitch" type="checkbox" name="draftSwitch" class="switch is-rtl" hidden>
-                    <label for="draftSwitch">Draft</label>
-                    Final
-                  </div>
-              </div>
-            </li>
-          </ul>
+      </article>
     </div>
+    <div class="tile is-vertical is-4">
+      <article class="panel p-2 not-showing-at-startup">
+        <p class="panel-heading has-text-white second-question animated">
+          Does a previous translation in this language exist?
+        </p>
+    
+        <div class="panel-block" id="language">
+    
+        <div class="select">
+          <select id="select-mode">
+            <option value="0" selected="selected">Select</option>
+            <option value="1">Yes, and I have the previous version file and the git diff file</option>
+            <option value="2">No, this is the first time, or I'm working with it (I have a draft)</option>
+          </select>
+        </div>
+        </div>    
+      </article>
+    </div>
+    <div class="tile is-vertical is-4">
+      <article class="panel p-2 not-showing-at-startup ">
+        <p class="panel-heading has-text-white third-question animated">
+          Upload your files
+        </p>    
+        <div class="panel-block" id="previousTranslationFileDiv">
+          <div class="file">
+            <label class="file-label">
+              <!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
+              <input class="file-input" file-selector type="file" id="file-selector-prev" name="file-selector-prev"
+                accept=".json">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Select a previous translation file
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="panel-block" id="diffFileDiv">
+          <div class="file">
+            <label class="file-label">
+              <!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
+              <input class="file-input" file-selector type="file" id="file-selector-diff" name="file-selector-diff">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Select a diff file
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="panel-block" id="language">
+          <div class="file">
+            <label class="file-label">
+              <!--                  <input class="file-input" file-selector type="file" id="file-selector" name="resume" accept=".json" disabled="true">-->
+              <input class="file-input" file-selector type="file" id="file-selector" name="file-selector" accept=".json">
+          
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose a file…
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>  
 </section>    
-<section id="progress-section" class="section pt-1" hidden>
-  <div class="container">
-    <label id="progressText"></label>
-    <progress class="progress logo-color" id="progress" value="0" max="0">progress</progress>
-  </div>
-</section>
+

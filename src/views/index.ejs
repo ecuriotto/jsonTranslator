@@ -1,8 +1,14 @@
 <%- include('header') %>
   <%- include('selection') %>
+  <%- include('dataHeader') %>
 
     <div id="snackbar"></div>
-    <div id="myData" class="p-2"></div>
+    <div id="myData" class="p-2">
+      <div id="dataHeader"></div>
+      <div id="dataGlobal"></div>
+    </div>
+    </div> <!--End full-->
+    <%- include('footer') %>
     <script>
   document.getElementById('search').addEventListener('input', () => searchcountry(search.value));
   
@@ -11,7 +17,6 @@
               cleanMyData();
               const file = event.target.files[0];
               savePrevPhrases(file);
-              nextStep(2);
       });
 
       const fileSelectorDiff = document.getElementById('file-selector-diff');
@@ -21,7 +26,6 @@
           console.log('before calling saveDiff')
           saveDiff(file);
           console.log('after calling saveDiff')
-          //nextStep(2);
         });
 
       const fileSelector = document.getElementById('file-selector');
@@ -29,16 +33,42 @@
         cleanMyData();
         const file = event.target.files[0];
         analyseInputJson(file);
-        nextStep(3);
 
       });
 
-      const saveButton = document.getElementById('save');
-      saveButton.addEventListener('click', () => {
-        saveOutputJson();
+      const saveDraft = document.getElementById('saveDraft');
+      saveDraft.addEventListener('click', () => {
+        saveOutputJson(false);
       });
 
+      const saveFinal = document.getElementById('saveFinal');
+        saveFinal.addEventListener('click', () => {
+          saveOutputJson(true);
+      });
+
+      const selectMode = document.getElementById('select-mode');
+      selectMode.addEventListener('change', () => {
+        var e = document.getElementById('select-mode');
+        var selected = e.options[e.selectedIndex].value;
+        if(selected != "0"){
+          showPanel(3);
+          if(selected=="2"){
+            hidePreviousVersionFiles(true);
+          }
+          else if(selected=="1"){
+            hidePreviousVersionFiles(false);
+          }
+        }
+      });
+
+      const selectTheme = document.getElementById('select-theme')
+        selectTheme.addEventListener('change', () => {
+          var e = document.getElementById('select-theme');
+          var selected = e.options[e.selectedIndex].value;
+          setTheme(selected);
+        });
+      
       
     </script>
+  
 
-  <%- include('footer') %>

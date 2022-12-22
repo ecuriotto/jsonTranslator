@@ -8,7 +8,7 @@ const calculaterows = (transLength) => {
 };
 
 const writeHeader = () => {
-  let divData = document.getElementById('myData');
+  let divDataHeader = document.getElementById('dataHeader');
   let divToAdd = document.createElement('div');
   divToAdd.className = 'columns';
 
@@ -61,7 +61,7 @@ const writeHeader = () => {
   divToAdd.appendChild(divHeader2);
   divToAdd.appendChild(divHeader3);
   divToAdd.appendChild(divHeader4);
-  divData.appendChild(divToAdd);
+  divDataHeader.appendChild(divToAdd);
 };
 
 const writeInputKey = (trans) => {
@@ -168,7 +168,8 @@ const writeMyTranslation = (trans, divToAdd) => {
   return divToAdd;
 };
 const writeDom = (paginatedData) => {
-  let divData = document.getElementById('myData');
+  let divGlobal = document.getElementById('dataGlobal');
+  divGlobal.setAttribute('id', 'dataGlobal');
 
   for (let trans of paginatedData) {
     let divToAdd = writeInputKey(trans);
@@ -176,7 +177,7 @@ const writeDom = (paginatedData) => {
     divToAdd = writeMachineTranslation(trans, divToAdd);
     divToAdd = writeAcceptMachineTranslation(trans.key, divToAdd);
     divToAdd = writeMyTranslation(trans, divToAdd);
-    divData.appendChild(divToAdd);
+    divGlobal.appendChild(divToAdd);
   }
   addEventListeners();
 };

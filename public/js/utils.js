@@ -9,7 +9,7 @@ const helperColor = 'has-text-link';
 //let divData = null;
 let jsonToSave = null;
 let page = 0;
-let limit = 6;
+let limit = 10;
 let totalPages = 0;
 let fileName = 'translation.json';
 
@@ -38,75 +38,31 @@ let analyseInputJson = (file) => {
     numberOfUpdatedKeysInit = Object.keys(alreadyTranslated).length;
     totalPages = Math.ceil(numberOfTotalKeys / limit);
     page = 0;
-    document.getElementById('myData').replaceChildren();
+    document.getElementById('dataGlobal').replaceChildren();
     let paginatedData = await makeRequest(
       'GET',
       '/getData/' + languageSelection.code,
       null,
       'page=' + page + '&limit=' + limit
     );
-    writeHeader();
+    document.getElementById('dataHeader').hasChildNodes() ? null : writeHeader();
     writeDom(JSON.parse(paginatedData));
+    switchHeaderToData(true);
   });
   reader.readAsText(file);
 };
 
-function checkIfDuplicateExists(arr) {
-  return new Set(arr).size + '-' + arr.length;
-}
-
-/*
-let doubleKeysVerify = [];
-verifyDoubleKeys = (myData) => {
-  for (const key in myData) {
-    if (typeof myData[key] == 'string') {
-      doubleKeysVerify.push(key);
-    } else {
-      verifyDoubleKeys(myData[key]);
-    }
-  }
-};
-
-let pickValue = (key) => {
-  let result = { val: '', source: '' };
-  if (checkNested(myData, userKeyword, key)) {
-    result.val = myData[userKeyword][key];
-    result.source = 'human';
-  } else if (checkNested(myData, helperKeyword, key)) {
-    result.val = myData[helperKeyword][key];
-    result.source = 'helper';
-  } else {
-    result.val = myData[key];
-    result.source = 'file';
-  }
-  return result;
-};
-
-let checkNested = (obj, level, ...rest) => {
-  if (obj === undefined) return false;
-  if (rest.length == 0 && obj.hasOwnProperty(level)) return true;
-  return checkNested(obj[level], ...rest);
-};
-*/
-const nextStep = (next) => {
-  let elements = document.getElementsByClassName('steps-segment');
-  for (const elementId in elements) {
-    if (elementId == next - 1) {
-      elements[elementId].classList.remove('is-active');
-      continue;
-    }
-    if (elementId == next) {
-      elements[elementId].classList.add('is-active');
-      break;
-    }
-  }
-};
-
-const cleanMyData = () => {
-  const myDataToDelete = document.getElementById('myData');
+function cleanMyData() {
+  const myDataToDelete = document.getElementById('dataGlobal');
   myDataToDelete.innerHTML = '';
   myData = {};
-};
+}
+
+function cleanAll() {
+  cleanMyData();
+  //Reinitialize the select
+  document.getElementById('select-mode').options[0].selected = true;
+}
 
 function makeRequest(method, url, payload, requestParams) {
   return new Promise(function (resolve, reject) {
@@ -158,3 +114,34 @@ let saveInFirestore = () => {
     );
   }
 };
+
+//show all panels <=n
+function showPanel(n) {
+  //Since the n=1 is the default case, n can only ne 2 or 3
+  let i;
+  let panels = document.getElementsByClassName('not-showing-at-startup');
+  if (n > panels.length || n < 1) {
+    panelIndex = panels.length;
+  }
+  for (i = 0; i < panels.length; i++) {
+    if (i <= n - 2) panels[i].style.display = 'block';
+    else panels[i].style.display = 'none';
+  }
+}
+
+function hidePreviousVersionFiles(shouldHide) {
+  const visibility = shouldHide ? 'none' : 'block';
+  document.getElementById('previousTranslationFileDiv').style.display = visibility;
+  document.getElementById('diffFileDiv').style.display = visibility;
+}
+
+function switchHeaderToData(shouldISwitch) {
+  const visibilitySelection = shouldISwitch ? 'none' : 'block';
+  const visibilityData = shouldISwitch ? 'block' : 'none';
+  document.getElementById('data-header').style.display = visibilityData;
+  document.getElementById('selection-section').style.display = visibilitySelection;
+}
+
+function setTheme(theme) {
+  document.documentElement.className = theme;
+}

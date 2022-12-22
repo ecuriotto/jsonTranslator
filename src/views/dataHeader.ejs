@@ -1,0 +1,30 @@
+<section id="data-header" class="hero p-2">
+    <div class="tile is-ancestor p-2">
+        <div class="tile is-vertical">
+            <div class="tile p-2">
+                <div class="tile is-3 p-1">
+                    <a href="javascript:void(0);" onclick="switchHeaderToData()"><i class="fa fa-arrow-left fa-2x"
+                            aria-hidden="true"></i></a>
+                </div>
+                <div class="tile is-5"></div>
+                <div class="tile is-2 p-1">
+                    <button class="button draft-button is-focus" id="saveDraft" value="Save draft">Save draft</button>
+                </div>
+                <div class="tile is-2 p-1">
+                    <button class="button final-button is-focus" id="saveFinal" value="Save final">Save final</button>
+                </div>
+            </div>
+    
+            <div class="tile is-vertical">
+    
+                <section id="progress-section" class="section pt-1" hidden>
+                    <div class="container">
+                        <label id="progressText"></label>
+                        <progress class="progress logo-color" id="progress" value="0" max="0">progress</progress>
+                    </div>
+                </section>
+    
+            </div>
+    
+        </div>
+</section>
